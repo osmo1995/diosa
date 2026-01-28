@@ -37,7 +37,12 @@ export const ConciergeWidget: React.FC = () => {
               </div>
               <span className="font-serif text-white tracking-widest text-lg">Diosa Concierge</span>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-white hover:text-divine-gold">
+            <button
+              type="button"
+              aria-label="Close concierge"
+              onClick={() => setIsOpen(false)}
+              className="text-white hover:text-divine-gold"
+            >
               <X size={20} />
             </button>
           </div>
@@ -69,7 +74,8 @@ export const ConciergeWidget: React.FC = () => {
           {/* Input */}
           <div className="p-4 border-t border-gray-100 flex items-center space-x-2">
             <input 
-              type="text" 
+              type="text"
+              aria-label="Ask the concierge"
               placeholder="Ask about extensions..." 
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -77,6 +83,8 @@ export const ConciergeWidget: React.FC = () => {
               className="flex-grow text-sm p-2 outline-none"
             />
             <button 
+              type="button"
+              aria-label="Send message"
               onClick={handleSend}
               className="p-2 text-divine-gold hover:text-deep-charcoal transition-colors"
             >
@@ -86,6 +94,8 @@ export const ConciergeWidget: React.FC = () => {
         </div>
       ) : (
         <button 
+          type="button"
+          aria-label="Open concierge chat"
           onClick={() => setIsOpen(true)}
           className="w-14 h-14 bg-divine-gold text-deep-charcoal rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300"
         >

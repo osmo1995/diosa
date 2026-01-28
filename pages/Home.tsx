@@ -28,6 +28,8 @@ export const Home: React.FC = () => {
             alt="Luxury Salon Interior"
             className="w-full h-full object-cover"
             loading="eager"
+            decoding="async"
+            fetchPriority="high"
             sizesAttr="100vw"
           />
           <div className="absolute inset-0 bg-black/40" />

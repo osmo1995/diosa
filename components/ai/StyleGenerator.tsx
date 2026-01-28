@@ -66,12 +66,20 @@ export const StyleGenerator: React.FC = () => {
               <>
                 <Upload size={48} className="text-gray-300 mb-4 group-hover:text-divine-gold transition-colors" />
                 <p className="text-sm text-gray-500 font-light">Drag & drop your photo or</p>
-                <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleUpload} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  aria-label="Upload a photo"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleUpload}
+                />
                 <Button variant="outline" className="mt-4 pointer-events-none">Choose File</Button>
               </>
             )}
             {image && (
               <button 
+                type="button"
+                aria-label="Remove uploaded photo"
                 onClick={() => setImage(null)} 
                 className="absolute top-4 right-4 bg-black/60 text-white p-2 rounded-full hover:bg-black transition-colors"
               >
