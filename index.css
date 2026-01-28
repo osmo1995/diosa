@@ -28,3 +28,10 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Print styles (booking confirmations, etc.) */
+@media print {
+  nav, footer, .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  a { color: #000 !important; text-decoration: none !important; }
+}

@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Upload, Camera, Loader2, Sparkles, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { OptimizedImage } from '../ui/OptimizedImage';
@@ -13,6 +13,7 @@ import {
   type ExtensionLength,
   type ExtensionPreset,
 } from '../../data/stylePreviews';
+import { stylePreviewAvailability } from '../../data/stylePreviewAvailability';
 
 export const StyleGenerator: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -23,6 +24,32 @@ export const StyleGenerator: React.FC = () => {
   const [preset, setPreset] = useState<ExtensionPreset>('extensions-natural-blend');
   const [shade, setShade] = useState<ExtensionColor>('champagne');
   const [length, setLength] = useState<ExtensionLength>('22');
+
+  const availableShades = useMemo(() => {
+    const avail = stylePreviewAvailability[preset] as Record<string, readonly string[]> | undefined;
+    const ids = new Set(Object.keys(avail ?? {}));
+    return extensionColors.filter((c) => ids.has(c.id));
+  }, [preset]);
+
+  const availableLengths = useMemo(() => {
+    const avail = stylePreviewAvailability[preset] as Record<string, readonly string[]> | undefined;
+    const lengths = (avail?.[shade] ?? []) as readonly string[];
+    const ids = new Set(lengths);
+    return extensionLengths.filter((l) => ids.has(l.id));
+  }, [preset, shade]);
+
+  // Keep selection valid as user changes preset/shade.
+  useEffect(() => {
+    if (!availableShades.some((c) => c.id === shade) && availableShades[0]) {
+      setShade(availableShades[0].id);
+    }
+  }, [availableShades, shade]);
+
+  useEffect(() => {
+    if (!availableLengths.some((l) => l.id === length) && availableLengths[0]) {
+      setLength(availableLengths[0].id);
+    }
+  }, [availableLengths, length]);
 
   const selectedPreview = useMemo(() => {
     return getExtensionPreviewUrl({ preset, color: shade, length, size: 700 });
@@ -118,7 +145,7 @@ export const StyleGenerator: React.FC = () => {
           <div className="space-y-4">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">Shade</p>
             <div className="flex flex-wrap gap-2">
-              {extensionColors.map((c) => (
+              {availableShades.map((c) => (
                 <button
                   type="button"
                   key={c.id}
@@ -139,7 +166,7 @@ export const StyleGenerator: React.FC = () => {
           <div className="space-y-4">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">Length</p>
             <div className="flex flex-wrap gap-2">
-              {extensionLengths.map((l) => (
+              {availableLengths.map((l) => (
                 <button
                   type="button"
                   key={l.id}

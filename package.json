@@ -9,7 +9,8 @@
     "build": "npx vite build",
     "preview": "npx vite preview",
     "analyze": "npx vite build --mode production && node scripts/bundleReport.mjs",
-    "smoke": "node scripts/smokeTest.mjs"
+    "smoke": "node scripts/smokeTest.mjs",
+    "verify:previews": "node scripts/verifyStylePreviews.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",

@@ -10,9 +10,10 @@ export type ExtensionColor =
   | 'beige'
   | 'ash'
   | 'honey'
-  | 'espresso';
+  | 'espresso'
+  | 'platinum-icy';
 
-export type ExtensionLength = '18' | '22' | '24';
+export type ExtensionLength = '14' | '18' | '22' | '24';
 
 export const extensionPresets: { id: ExtensionPreset; label: string; description: string }[] = [
   { id: 'extensions-natural-blend', label: 'Natural Blend', description: 'Seamless everyday density with invisible roots.' },
@@ -21,16 +22,19 @@ export const extensionPresets: { id: ExtensionPreset; label: string; description
   { id: 'extensions-soft-waves', label: 'Soft Waves', description: 'Soft movement with a luxury finish.' },
 ];
 
-export const extensionColors: { id: ExtensionColor; label: string }[] = [
-  { id: 'old-money', label: 'Old Money Blonde' },
-  { id: 'champagne', label: 'Champagne' },
-  { id: 'beige', label: 'Beige Blonde' },
-  { id: 'ash', label: 'Cool Ash' },
-  { id: 'honey', label: 'Honey Bronde' },
-  { id: 'espresso', label: 'Rich Espresso' },
+export const extensionColors: { id: ExtensionColor; label: string; group: 'Blondes' | 'Brunettes' }[] = [
+  { id: 'platinum-icy', label: 'Platinum Icy', group: 'Blondes' },
+  { id: 'old-money', label: 'Old Money Blonde', group: 'Blondes' },
+  { id: 'champagne', label: 'Champagne', group: 'Blondes' },
+  { id: 'beige', label: 'Beige Blonde', group: 'Blondes' },
+  { id: 'ash', label: 'Cool Ash', group: 'Blondes' },
+  { id: 'honey', label: 'Honey Bronde', group: 'Blondes' },
+  { id: 'espresso', label: 'Rich Espresso', group: 'Brunettes' },
 ];
 
+// NOTE: Available lengths depend on preset+color. See stylePreviewAvailability.
 export const extensionLengths: { id: ExtensionLength; label: string }[] = [
+  { id: '14', label: '14"' },
   { id: '18', label: '18"' },
   { id: '22', label: '22"' },
   { id: '24', label: '24"' },

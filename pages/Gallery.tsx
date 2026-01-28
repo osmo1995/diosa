@@ -35,6 +35,13 @@ export const Gallery: React.FC = () => {
   return (
     <div className="pt-32 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
+        <nav className="text-xs text-gray-500 mb-6" aria-label="Breadcrumb">
+          <button className="hover:text-deep-charcoal" onClick={() => (window.location.hash = '/')} type="button">Home</button>
+          <span className="mx-2">/</span>
+          <span className="text-gray-700">Gallery</span>
+        </nav>
+      </div>
+      <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection className="text-center mb-16">
           <h1 className="text-5xl md:text-7xl font-serif uppercase tracking-widest mb-6">Gallery</h1>
           <p className="text-gray-500 font-light text-lg mb-12 italic">Curation of our finest transformations in Yorkville.</p>

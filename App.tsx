@@ -1,11 +1,13 @@
 
 import React, { Suspense } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { ScrollToTop } from './components/ui/ScrollToTop';
 
 import { Home } from './pages/Home';
+import { NotFound } from './pages/NotFound';
 
 const Gallery = React.lazy(() => import('./pages/Gallery').then((m) => ({ default: m.Gallery })));
 const Contact = React.lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
@@ -20,14 +22,6 @@ const ConciergeWidget = React.lazy(() =>
   import('./components/ai/ConciergeWidget').then((m) => ({ default: m.ConciergeWidget }))
 );
 
-// Scroll to top on route change
-const ScrollToTop = () => {
-  const { pathname } = useLocation();
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
-};
 
 const AnimatedSection: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="animate-fade-in">{children}</div>
@@ -75,6 +69,7 @@ const App: React.FC = () => {
                 <Route path="/booking" element={<Contact />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/style-generator" element={<StyleGeneratorPage />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </AnimatePresence>

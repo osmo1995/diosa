@@ -8,6 +8,11 @@ export const Services: React.FC = () => {
   return (
     <div className="pt-32 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
+        <nav className="text-xs text-gray-500 mb-6" aria-label="Breadcrumb">
+          <button className="hover:text-deep-charcoal" onClick={() => (window.location.hash = '/')} type="button">Home</button>
+          <span className="mx-2">/</span>
+          <span className="text-gray-700">Services</span>
+        </nav>
         <AnimatedSection className="text-center mb-16">
           <p className="font-accent text-4xl text-divine-gold mb-2">Methods, Elevated</p>
           <h1 className="text-5xl md:text-7xl font-serif uppercase tracking-widest mb-6">Services</h1>
