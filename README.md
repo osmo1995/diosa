@@ -17,11 +17,16 @@ View your app in AI Studio: https://ai.studio/apps/drive/1IxU2G0iWEP2wBOi2bW5Ru7
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. (Optional) Supabase persistence for generated images
-   - Create a Supabase Storage bucket named `generated-previews` (Public recommended for shareable links)
+   - Create a Supabase Storage bucket named `generated-previews`
+     - Recommended: **Private bucket** + signed URLs (more secure)
    - In Vercel project env (or `.env.local` for local dev), set:
      - `SUPABASE_URL`
      - `SUPABASE_SERVICE_ROLE_KEY`
-     - (Optional) `SUPABASE_STYLE_BUCKET=generated-previews`
+     - `SUPABASE_STYLE_BUCKET=generated-previews`
+     - `SUPABASE_BUCKET_PUBLIC=false`
+     - `SUPABASE_SIGNED_URL_TTL_SECONDS=3600` (optional)
    - Run `supabase_schema.sql` in Supabase SQL Editor to create `style_generations` table
+   - Optional: `GET /api/generations?limit=20` lists recent generations.
+     - If you set `ADMIN_TOKEN`, requests must include header `x-admin-token: <token>`
 4. Run the app:
    `npm run dev`

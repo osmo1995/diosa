@@ -89,8 +89,21 @@ Return ONLY the edited image.`;
         });
 
       if (!uploadError) {
-        const pub = supabase.storage.from(bucket).getPublicUrl(storagePath);
-        publicUrl = pub.data.publicUrl;
+        const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').toLowerCase() === 'true';
+        const ttl = Number(process.env.SUPABASE_SIGNED_URL_TTL_SECONDS ?? 3600);
+
+        if (bucketPublic) {
+          const pub = supabase.storage.from(bucket).getPublicUrl(storagePath);
+          publicUrl = pub.data.publicUrl;
+        } else {
+          const { data: signed, error: signError } = await supabase.storage
+            .from(bucket)
+            .createSignedUrl(storagePath, ttl);
+          if (!signError) {
+            // reuse publicUrl variable to store signed URL for response
+            publicUrl = signed?.signedUrl ?? null;
+          }
+        }
 
         // Log metadata
         await supabase.from('style_generations').insert({
@@ -102,7 +115,7 @@ Return ONLY the edited image.`;
           output_mime_type: outputMimeType,
           storage_bucket: bucket,
           storage_path: storagePath,
-          public_url: publicUrl,
+          public_url: bucketPublic ? publicUrl : null,
         });
       } else {
         console.warn('[api/style] Supabase upload failed', { requestId, message: uploadError.message });
@@ -112,11 +125,14 @@ Return ONLY the edited image.`;
       console.warn('[api/style] Supabase persistence skipped/failed', { requestId, message: e?.message });
     }
 
+    const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').toLowerCase() === 'true';
+
     return sendJson(res, 200, {
       // Back-compat: return base64 only if requested.
       imageBase64: body.includeBase64 ? outputBase64 : undefined,
       mimeType: outputMimeType,
-      publicUrl,
+      publicUrl: bucketPublic ? publicUrl : null,
+      signedUrl: bucketPublic ? null : publicUrl,
       storagePath,
       requestId,
     });

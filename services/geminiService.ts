@@ -1,5 +1,10 @@
 
-type StyleApiResponse = { imageBase64?: string; mimeType: string; publicUrl?: string | null };
+type StyleApiResponse = {
+  imageBase64?: string;
+  mimeType: string;
+  publicUrl?: string | null;
+  signedUrl?: string | null;
+};
 
 type ConciergeApiResponse = { text: string };
 
@@ -37,6 +42,7 @@ export const generateStylePreview = async (
 
     const json = (await res.json()) as StyleApiResponse;
 
+    if (json.signedUrl) return json.signedUrl;
     if (json.publicUrl) return json.publicUrl;
     if (json.imageBase64) return asDataUrl(json.imageBase64, json.mimeType);
     return null;
