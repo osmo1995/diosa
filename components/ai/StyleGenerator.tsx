@@ -181,7 +181,11 @@ export const StyleGenerator: React.FC = () => {
       {/* Result Display */}
       <div className="space-y-4">
         <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">Virtual Preview Result</label>
-        <div className="bg-soft-champagne h-[600px] border border-gray-100 shadow-inner flex items-center justify-center overflow-hidden relative">
+        <div
+          className="bg-soft-champagne h-[600px] border border-gray-100 shadow-inner flex items-center justify-center overflow-hidden relative"
+          aria-live="polite"
+          aria-busy={isGenerating}
+        >
           {result ? (
             <>
               <img src={result} className="w-full h-full object-cover animate-fade-in" alt="Transformation" />

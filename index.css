@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: theme('colors.goddess-white');
+    color: theme('colors.deep-charcoal');
+    font-family: theme('fontFamily.sans');
+  }
+
+  .font-serif {
+    font-family: theme('fontFamily.serif');
+  }
+
+  .font-accent {
+    font-family: theme('fontFamily.accent');
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
