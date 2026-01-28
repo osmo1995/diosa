@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { handleConcierge } from '../server/conciergeHandler';
+import { handleConcierge } from '../server/conciergeHandler.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
