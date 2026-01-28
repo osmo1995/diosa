@@ -13,6 +13,9 @@ export const generateStylePreview = async (
   shade: string,
   length: string
 ): Promise<string | null> => {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 90_000);
+
   try {
     const res = await fetch('/api/style', {
       method: 'POST',
@@ -23,6 +26,7 @@ export const generateStylePreview = async (
         shade,
         length,
       }),
+      signal: controller.signal,
     });
 
     if (!res.ok) {
@@ -35,15 +39,21 @@ export const generateStylePreview = async (
   } catch (e) {
     console.error('Style API error', e);
     return null;
+  } finally {
+    window.clearTimeout(timeout);
   }
 };
 
 export const conciergeResponse = async (query: string): Promise<string> => {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 30_000);
+
   try {
     const res = await fetch('/api/concierge', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
+      signal: controller.signal,
     });
 
     if (!res.ok) {
@@ -54,5 +64,7 @@ export const conciergeResponse = async (query: string): Promise<string> => {
     return json.text;
   } catch {
     return "I apologize, but I am having trouble connecting to the goddess realm right now. Please call us for immediate assistance.";
+  } finally {
+    window.clearTimeout(timeout);
   }
 };

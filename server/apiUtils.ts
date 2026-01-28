@@ -16,6 +16,42 @@ export function sendJson(res: ServerResponse, status: number, body: unknown) {
   res.end(json);
 }
 
+export function getRequestId(req: IncomingMessage): string {
+  // Prefer inbound request ID if present (Vercel may add one)
+  const hdr = req.headers['x-request-id'];
+  if (typeof hdr === 'string' && hdr.trim()) return hdr.trim();
+  // Simple unique id
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+// Best-effort, per-instance rate limiter (serverless-safe, not global guarantee).
+const rateState = new Map<string, { count: number; resetAt: number }>();
+
+export function rateLimit(req: IncomingMessage, res: ServerResponse, opts: { windowMs: number; max: number }) {
+  const now = Date.now();
+  const ip =
+    (typeof req.headers['x-forwarded-for'] === 'string' && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+    (typeof req.socket?.remoteAddress === 'string' ? req.socket.remoteAddress : 'unknown');
+
+  const key = `${ip}`;
+  const curr = rateState.get(key);
+  if (!curr || curr.resetAt <= now) {
+    rateState.set(key, { count: 1, resetAt: now + opts.windowMs });
+    return true;
+  }
+
+  if (curr.count >= opts.max) {
+    const retryAfter = Math.max(1, Math.ceil((curr.resetAt - now) / 1000));
+    res.setHeader('Retry-After', String(retryAfter));
+    sendJson(res, 429, { error: 'Rate limit exceeded. Please try again shortly.' });
+    return false;
+  }
+
+  curr.count += 1;
+  rateState.set(key, curr);
+  return true;
+}
+
 export function allowMethods(req: IncomingMessage, res: ServerResponse, methods: string[]) {
   if (!req.method || !methods.includes(req.method)) {
     res.statusCode = 405;
