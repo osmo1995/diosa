@@ -17,7 +17,7 @@ export function getExportImageUrl(p: string): string {
  * Given a folder base like '/exports/hero', generates a srcSet string:
  * '/exports/hero/400.webp 400w, /exports/hero/700.webp 700w, ...'
  */
-export function getExportSrcSet(basePath: string, ext: 'webp' | 'jpg' | 'png' = 'webp'): string {
+export function getExportSrcSet(basePath: string, ext: 'webp' | 'jpg' | 'png' | 'avif' = 'webp'): string {
   const base = basePath.replace(/\/$/, '');
   return EXPORT_SIZES.map((s) => `${base}/${s}.${ext} ${s}w`).join(', ');
 }
@@ -25,7 +25,7 @@ export function getExportSrcSet(basePath: string, ext: 'webp' | 'jpg' | 'png' = 
 /**
  * Convenience: returns the default (700) URL for a base folder.
  */
-export function getExportDefaultSrc(basePath: string, ext: 'webp' | 'jpg' | 'png' = 'webp'): string {
+export function getExportDefaultSrc(basePath: string, ext: 'webp' | 'jpg' | 'png' | 'avif' = 'webp'): string {
   const base = basePath.replace(/\/$/, '');
   return `${base}/700.${ext}`;
 }

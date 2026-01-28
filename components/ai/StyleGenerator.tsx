@@ -66,12 +66,20 @@ export const StyleGenerator: React.FC = () => {
               <>
                 <Upload size={48} className="text-gray-300 mb-4 group-hover:text-divine-gold transition-colors" />
                 <p className="text-sm text-gray-500 font-light">Drag & drop your photo or</p>
-                <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleUpload} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  aria-label="Upload a photo"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleUpload}
+                />
                 <Button variant="outline" className="mt-4 pointer-events-none">Choose File</Button>
               </>
             )}
             {image && (
               <button 
+                type="button"
+                aria-label="Remove uploaded photo"
                 onClick={() => setImage(null)} 
                 className="absolute top-4 right-4 bg-black/60 text-white p-2 rounded-full hover:bg-black transition-colors"
               >
@@ -181,7 +189,11 @@ export const StyleGenerator: React.FC = () => {
       {/* Result Display */}
       <div className="space-y-4">
         <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">Virtual Preview Result</label>
-        <div className="bg-soft-champagne h-[600px] border border-gray-100 shadow-inner flex items-center justify-center overflow-hidden relative">
+        <div
+          className="bg-soft-champagne h-[600px] border border-gray-100 shadow-inner flex items-center justify-center overflow-hidden relative"
+          aria-live="polite"
+          aria-busy={isGenerating}
+        >
           {result ? (
             <>
               <img src={result} className="w-full h-full object-cover animate-fade-in" alt="Transformation" />

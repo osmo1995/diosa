@@ -1,18 +1,22 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { GoogleGenAI } from '@google/genai';
-import { allowMethods, readJsonBody, sendJson } from './apiUtils';
+import { allowMethods, getRequestId, rateLimit, readJsonBody, sendJson } from './apiUtils.js';
 
 type ConciergeRequest = { query: string };
 
 export async function handleConcierge(req: IncomingMessage, res: ServerResponse, apiKey?: string) {
   if (!allowMethods(req, res, ['POST'])) return;
+  if (!rateLimit(req, res, { windowMs: 60_000, max: 30 })) return;
+
+  const requestId = getRequestId(req);
+  res.setHeader('x-request-id', requestId);
 
   try {
     const key = apiKey ?? process.env.GEMINI_API_KEY;
-    if (!key) return sendJson(res, 500, { error: 'Missing GEMINI_API_KEY on server' });
+    if (!key) return sendJson(res, 500, { error: 'Missing GEMINI_API_KEY on server', requestId });
 
     const body = await readJsonBody<ConciergeRequest>(req);
-    if (!body?.query) return sendJson(res, 400, { error: 'query is required' });
+    if (!body?.query) return sendJson(res, 400, { error: 'query is required', requestId });
 
     const ai = new GoogleGenAI({ apiKey: key });
     const response = await ai.models.generateContent({
@@ -24,8 +28,9 @@ export async function handleConcierge(req: IncomingMessage, res: ServerResponse,
       },
     });
 
-    return sendJson(res, 200, { text: response.text });
+    return sendJson(res, 200, { text: response.text, requestId });
   } catch (e: any) {
-    return sendJson(res, 500, { error: e?.message ?? 'Unknown error' });
+    console.error('[api/concierge]', { requestId, message: e?.message });
+    return sendJson(res, 500, { error: e?.message ?? 'Unknown error', requestId });
   }
 }

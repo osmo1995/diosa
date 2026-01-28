@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { handleStyle } from '../server/styleHandler';
+import { handleStyle } from '../server/styleHandler.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // VercelRequest/VercelResponse are compatible with IncomingMessage/ServerResponse

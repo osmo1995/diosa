@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { GoogleGenAI } from '@google/genai';
-import { allowMethods, extractBase64Payload, readJsonBody, sendJson } from './apiUtils';
+import { allowMethods, extractBase64Payload, getRequestId, rateLimit, readJsonBody, sendJson } from './apiUtils.js';
 
 type StyleRequest = {
   imageBase64: string; // can be data URL or raw base64
@@ -11,13 +11,18 @@ type StyleRequest = {
 
 export async function handleStyle(req: IncomingMessage, res: ServerResponse, apiKey?: string) {
   if (!allowMethods(req, res, ['POST'])) return;
+  // Image generation is more expensive; keep a tighter rate limit.
+  if (!rateLimit(req, res, { windowMs: 60_000, max: 10 })) return;
+
+  const requestId = getRequestId(req);
+  res.setHeader('x-request-id', requestId);
 
   try {
     const key = apiKey ?? process.env.GEMINI_API_KEY;
-    if (!key) return sendJson(res, 500, { error: 'Missing GEMINI_API_KEY on server' });
+    if (!key) return sendJson(res, 500, { error: 'Missing GEMINI_API_KEY on server', requestId });
 
     const body = await readJsonBody<StyleRequest>(req);
-    if (!body?.imageBase64) return sendJson(res, 400, { error: 'imageBase64 is required' });
+    if (!body?.imageBase64) return sendJson(res, 400, { error: 'imageBase64 is required', requestId });
 
     const { base64, mimeType } = extractBase64Payload(body.imageBase64);
 
@@ -49,14 +54,16 @@ Return ONLY the edited image.`;
     const imagePart = parts.find((p: any) => p.inlineData?.data);
 
     if (!imagePart?.inlineData?.data) {
-      return sendJson(res, 502, { error: 'No image returned from model' });
+      return sendJson(res, 502, { error: 'No image returned from model', requestId });
     }
 
     return sendJson(res, 200, {
       imageBase64: imagePart.inlineData.data,
       mimeType: imagePart.inlineData.mimeType ?? 'image/png',
+      requestId,
     });
   } catch (e: any) {
-    return sendJson(res, 500, { error: e?.message ?? 'Unknown error' });
+    console.error('[api/style]', { requestId, message: e?.message });
+    return sendJson(res, 500, { error: e?.message ?? 'Unknown error', requestId });
   }
 }

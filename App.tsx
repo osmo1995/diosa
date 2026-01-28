@@ -6,11 +6,15 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 
 import { Home } from './pages/Home';
-import { Gallery } from './pages/Gallery';
-import { Contact } from './pages/Contact';
-import { StyleGeneratorPage } from './pages/StyleGeneratorPage';
-import { Services } from './pages/Services';
-import { About } from './pages/About';
+
+const Gallery = React.lazy(() => import('./pages/Gallery').then((m) => ({ default: m.Gallery })));
+const Contact = React.lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
+const StyleGeneratorPage = React.lazy(() =>
+  import('./pages/StyleGeneratorPage').then((m) => ({ default: m.StyleGeneratorPage }))
+);
+const Services = React.lazy(() => import('./pages/Services').then((m) => ({ default: m.Services })));
+const About = React.lazy(() => import('./pages/About').then((m) => ({ default: m.About })));
+
 
 const ConciergeWidget = React.lazy(() =>
   import('./components/ai/ConciergeWidget').then((m) => ({ default: m.ConciergeWidget }))
@@ -54,14 +58,25 @@ const App: React.FC = () => {
         <Navbar />
         <main className="flex-grow">
           <AnimatePresence mode="wait">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/booking" element={<Contact />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/style-generator" element={<StyleGeneratorPage />} />
-            </Routes>
+            <Suspense
+              fallback={
+                <div className="pt-40 pb-24 bg-goddess-white">
+                  <div className="max-w-7xl mx-auto px-6">
+                    <div className="h-8 w-64 bg-gray-200 animate-pulse mb-6" />
+                    <div className="h-4 w-full max-w-xl bg-gray-200 animate-pulse" />
+                  </div>
+                </div>
+              }
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/booking" element={<Contact />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/style-generator" element={<StyleGeneratorPage />} />
+              </Routes>
+            </Suspense>
           </AnimatePresence>
         </main>
         <Footer />

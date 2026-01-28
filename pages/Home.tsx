@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { OptimizedImage } from '../components/ui/OptimizedImage';
@@ -9,6 +9,30 @@ import { Link } from 'react-router-dom';
 
 export const Home: React.FC = () => {
   const [activeTransform, setActiveTransform] = useState(0);
+  const [deferStage, setDeferStage] = useState<0 | 1 | 2 | 3>(0);
+
+  useEffect(() => {
+    // Stage below-the-fold work to reduce initial main-thread work.
+    const w = window as any;
+    const idle = (cb: () => void, timeout = 1200) =>
+      w.requestIdleCallback ? w.requestIdleCallback(cb, { timeout }) : window.setTimeout(cb, 250);
+
+    const id1 = idle(() => setDeferStage(1), 800);
+    const id2 = idle(() => setDeferStage(2), 1400);
+    const id3 = idle(() => setDeferStage(3), 2000);
+
+    return () => {
+      if (w.cancelIdleCallback) {
+        try { w.cancelIdleCallback(id1); } catch {}
+        try { w.cancelIdleCallback(id2); } catch {}
+        try { w.cancelIdleCallback(id3); } catch {}
+      } else {
+        clearTimeout(id1);
+        clearTimeout(id2);
+        clearTimeout(id3);
+      }
+    };
+  }, []);
 
   const nextTransform = () => {
     setActiveTransform((prev) => (prev + 1) % transformations.length);
@@ -25,9 +49,12 @@ export const Home: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <OptimizedImage 
             basePath="/exports/hero"
+            preferAvif
             alt="Luxury Salon Interior"
             className="w-full h-full object-cover"
             loading="eager"
+            decoding="async"
+            fetchPriority="high"
             sizesAttr="100vw"
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -59,6 +86,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 2. Virtual Preview Teaser */}
+      {deferStage >= 1 && (
       <section className="py-24 bg-goddess-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 shadow-2xl overflow-hidden rounded-sm">
@@ -88,8 +116,10 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 3. Services Preview */}
+      {deferStage >= 1 && (
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 text-center mb-16">
           <AnimatedSection>
@@ -125,8 +155,10 @@ export const Home: React.FC = () => {
           ))}
         </div>
       </section>
+      )}
 
       {/* 4. Transformations Carousel */}
+      {deferStage >= 2 && (
       <section className="py-24 bg-soft-champagne">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
@@ -185,8 +217,10 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 5. Testimonials */}
+      {deferStage >= 2 && (
       <section className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
@@ -213,12 +247,15 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 6. Final CTA */}
+      {deferStage >= 3 && (
       <section className="relative py-32 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <OptimizedImage 
             basePath="/exports/cta"
+            preferAvif
             alt="Final CTA Background" 
             className="w-full h-full object-cover"
             sizesAttr="100vw"
@@ -245,6 +282,7 @@ export const Home: React.FC = () => {
           </AnimatedSection>
         </div>
       </section>
+      )}
     </div>
   );
 };

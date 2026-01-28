@@ -20,7 +20,7 @@ function copyDir(src, dest) {
   }
 }
 
-function main() {
+async function main() {
   if (!fs.existsSync(SRC_DIR)) {
     console.warn(`[copyExportsToPublic] Skipping: '${SRC_DIR}' folder not found.`);
     return;
@@ -32,6 +32,14 @@ function main() {
   }
 
   copyDir(SRC_DIR, DEST_DIR);
+
+  // Generate AVIF for critical images into exports/ (build-time only; not committed),
+  // then copy to public/exports so they ship with the static output.
+  try {
+    await import('./generateAvif.mjs');
+  } catch {
+    // non-fatal
+  }
 
   const stat = fs.statSync(DEST_DIR);
   console.log(`[copyExportsToPublic] Copied '${SRC_DIR}' -> '${DEST_DIR}' (mtime=${stat.mtime.toISOString()})`);
