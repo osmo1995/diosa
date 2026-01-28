@@ -11,7 +11,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const adminToken = process.env.ADMIN_TOKEN?.trim();
-    const provided = req.headers['x-admin-token'];
+    const raw = req.headers['x-admin-token'];
+    const provided = (Array.isArray(raw) ? raw[0] : raw)?.toString().trim();
 
     // Fail closed: do not allow listing unless ADMIN_TOKEN is configured and provided.
     if (!adminToken) {
