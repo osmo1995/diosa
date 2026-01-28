@@ -9,20 +9,28 @@ import { Link } from 'react-router-dom';
 
 export const Home: React.FC = () => {
   const [activeTransform, setActiveTransform] = useState(0);
-  const [deferRest, setDeferRest] = useState(false);
+  const [deferStage, setDeferStage] = useState<0 | 1 | 2 | 3>(0);
 
   useEffect(() => {
-    // Defer below-the-fold sections to reduce initial main-thread work (improves LCP/TBT).
+    // Stage below-the-fold work to reduce initial main-thread work.
     const w = window as any;
-    const schedule = w.requestIdleCallback
-      ? (cb: () => void) => w.requestIdleCallback(cb, { timeout: 1200 })
-      : (cb: () => void) => window.setTimeout(cb, 250);
+    const idle = (cb: () => void, timeout = 1200) =>
+      w.requestIdleCallback ? w.requestIdleCallback(cb, { timeout }) : window.setTimeout(cb, 250);
 
-    const id = schedule(() => setDeferRest(true));
+    const id1 = idle(() => setDeferStage(1), 800);
+    const id2 = idle(() => setDeferStage(2), 1400);
+    const id3 = idle(() => setDeferStage(3), 2000);
+
     return () => {
-      // Best-effort cleanup.
-      if (w.cancelIdleCallback && typeof id === 'number') w.cancelIdleCallback(id);
-      else clearTimeout(id);
+      if (w.cancelIdleCallback) {
+        try { w.cancelIdleCallback(id1); } catch {}
+        try { w.cancelIdleCallback(id2); } catch {}
+        try { w.cancelIdleCallback(id3); } catch {}
+      } else {
+        clearTimeout(id1);
+        clearTimeout(id2);
+        clearTimeout(id3);
+      }
     };
   }, []);
 
@@ -41,6 +49,7 @@ export const Home: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <OptimizedImage 
             basePath="/exports/hero"
+            preferAvif
             alt="Luxury Salon Interior"
             className="w-full h-full object-cover"
             loading="eager"
@@ -77,7 +86,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 2. Virtual Preview Teaser */}
-      {deferRest && (
+      {deferStage >= 1 && (
       <section className="py-24 bg-goddess-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 shadow-2xl overflow-hidden rounded-sm">
@@ -110,7 +119,7 @@ export const Home: React.FC = () => {
       )}
 
       {/* 3. Services Preview */}
-      {deferRest && (
+      {deferStage >= 1 && (
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 text-center mb-16">
           <AnimatedSection>
@@ -149,7 +158,7 @@ export const Home: React.FC = () => {
       )}
 
       {/* 4. Transformations Carousel */}
-      {deferRest && (
+      {deferStage >= 2 && (
       <section className="py-24 bg-soft-champagne">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
@@ -211,7 +220,7 @@ export const Home: React.FC = () => {
       )}
 
       {/* 5. Testimonials */}
-      {deferRest && (
+      {deferStage >= 2 && (
       <section className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
@@ -241,11 +250,12 @@ export const Home: React.FC = () => {
       )}
 
       {/* 6. Final CTA */}
-      {deferRest && (
+      {deferStage >= 3 && (
       <section className="relative py-32 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <OptimizedImage 
             basePath="/exports/cta"
+            preferAvif
             alt="Final CTA Background" 
             className="w-full h-full object-cover"
             sizesAttr="100vw"
