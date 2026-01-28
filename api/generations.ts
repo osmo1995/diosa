@@ -11,11 +11,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const adminToken = process.env.ADMIN_TOKEN?.trim();
-    if (adminToken) {
-      const provided = req.headers['x-admin-token'];
-      if (provided !== adminToken) {
-        return sendJson(res as any, 401, { error: 'Unauthorized', requestId });
-      }
+    const provided = req.headers['x-admin-token'];
+
+    // Fail closed: do not allow listing unless ADMIN_TOKEN is configured and provided.
+    if (!adminToken) {
+      return sendJson(res as any, 401, { error: 'ADMIN_TOKEN is not configured', requestId });
+    }
+
+    if (provided !== adminToken) {
+      return sendJson(res as any, 401, { error: 'Unauthorized', requestId });
     }
 
     const supabase = getSupabaseAdmin();

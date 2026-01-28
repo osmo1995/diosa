@@ -123,7 +123,7 @@ Return ONLY the edited image.`;
         }
 
         // Log metadata
-        await supabase.from('style_generations').insert({
+        const { error: insertError } = await supabase.from('style_generations').insert({
           request_id: requestId,
           preset: body.preset,
           shade: body.shade,
@@ -134,6 +134,10 @@ Return ONLY the edited image.`;
           storage_path: storagePath,
           public_url: bucketPublic ? publicUrl : null,
         });
+
+        if (insertError) {
+          console.warn('[api/style] DB insert failed', { requestId, message: insertError.message });
+        }
       } else {
         console.warn('[api/style] Supabase upload failed', { requestId, message: uploadError.message });
       }
@@ -152,6 +156,13 @@ Return ONLY the edited image.`;
       signedUrl: bucketPublic ? null : publicUrl,
       storagePath,
       requestId,
+      persistence: {
+        attempted: true,
+        bucket,
+        bucketPublic,
+        savedToStorage: Boolean(storagePath) && Boolean(publicUrl),
+        savedToDb: null,
+      },
     });
   } catch (e: any) {
     console.error('[api/style]', { requestId, message: e?.message });

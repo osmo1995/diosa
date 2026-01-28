@@ -21,14 +21,17 @@ View your app in AI Studio: https://ai.studio/apps/drive/1IxU2G0iWEP2wBOi2bW5Ru7
      1) Storage → create bucket `generated-previews` (recommended: **Private**)
         - Note: API will attempt to auto-create this bucket, but creating it in the dashboard is still recommended.
      2) SQL Editor → run `supabase_schema.sql`
-        - Without this, `/api/generations` will return an error and `/api/style` will skip DB logging.
-     3) Vercel env (Production):
+     3) (Optional) SQL Editor → run `supabase_indexes.sql` for faster lookups
+     4) Vercel env (Production):
         - `SUPABASE_URL`
         - `SUPABASE_SERVICE_ROLE_KEY` (service_role JWT starting with `eyJ...`)
         - `SUPABASE_STYLE_BUCKET=generated-previews`
         - `SUPABASE_BUCKET_PUBLIC=false`
         - `SUPABASE_SIGNED_URL_TTL_SECONDS=3600` (optional)
-     4) Optional endpoint: `GET /api/generations?limit=20` lists recent generations.
-        - If you set `ADMIN_TOKEN`, requests must include header `x-admin-token: <token>`
+        - `ADMIN_TOKEN` (required for /api/generations)
+
+   - Admin listing endpoint (protected):
+     - `GET /api/generations?limit=20`
+     - Must include header: `x-admin-token: <ADMIN_TOKEN>`
 4. Run the app:
    `npm run dev`
