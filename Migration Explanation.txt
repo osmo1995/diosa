@@ -1,0 +1,338 @@
+Migration Explanation — Domain-First Image Export (exports/)
+
+Last updated: 2026-01-28
+Source project: Diosa Studio Yorkville
+
+Goal
+You want to integrate ALL generated image variations from this repo into a new application, in a domain-first structure, preserving the same folder layout and filenames.
+
+This repo already contains a ready-to-copy export folder:
+  exports/
+
+It is organized into:
+  exports/brand/
+  exports/hero/
+  exports/cta/
+  exports/services/
+  exports/gallery/
+  exports/transformations/
+  exports/style-previews/
+  exports/misc/ (quiz and any non-matching images)
+
+A manifest mapping the original source paths to the new export paths exists at:
+  tmp_rovodev_domain_export_manifest.json
+
+The manifest includes:
+- from: original relative path (in this repo)
+- to: export path (in exports/…)
+- domain: brand|hero|cta|services|gallery|transformations|style-previews|misc
+- sizeBytes: file size
+- sha256: content hash (useful for dedupe)
+
+
+PART A — Fastest path: recreate exports/ in a new application (recommended)
+
+1) Create the destination folder in the new application
+In your new application repository, create a folder at repo root:
+  exports/
+
+2) Copy the entire exports/ folder as-is
+From this repo:
+  exports/
+Into the new repo:
+  exports/
+
+This preserves the domain-first organization and all existing variations (400/700/1000/2000 sizes, etc).
+
+3) Confirm the structure matches
+You should see examples like:
+  exports/hero/400.webp
+  exports/cta/2000.webp
+  exports/services/tape-in/700.webp
+  exports/transformations/r1_before/1000.webp
+  exports/style-previews/extensions/extensions-natural-blend/old-money/24/400.webp
+
+4) Decide how the new application will serve or bundle these assets
+This depends on your target stack, but the key principle is:
+- Keep the exports folder intact
+- Ensure your build/deploy setup includes the exports folder (or moves it into the framework’s public/static folder)
+
+Common patterns:
+A) React/Vite / static hosting:
+- If your new app serves static files from a “public/” directory, you can either:
+  Option 1: Move exports/ under public/ (public/exports/...) and reference as /exports/...
+  Option 2: Keep exports/ at repo root and add a build step to copy exports -> public/exports
+
+B) Next.js:
+- Next.js serves static assets from /public
+- Copy exports/ to: public/exports/
+- Reference images as: /exports/hero/700.webp
+
+C) Node/Express or other server:
+- Serve exports/ as a static folder:
+  app.use('/exports', express.static(path.join(__dirname, 'exports')))
+
+
+PART B — Validation checklist (ensure nothing is missing)
+
+1) Count check
+In this repo, the export contains 522 images (generated set + brand).
+Confirm in your new repo after copy.
+
+2) Spot-check by domain
+- hero: should contain 4 webp sizes (400/700/1000/2000)
+- cta: should contain 4 webp sizes
+- services: 4 subfolders (hand-tied, keratin-bond, sew-in, tape-in), each with 4 sizes
+- transformations: many subfolders r1_before/r1_after/... each with 4 sizes
+- gallery: categories with 4 sizes each item
+- style-previews: nested structure by category/preset/color/length
+
+3) Integrity check using the manifest
+If you also copy the manifest to the new repo, you can verify:
+- Every file in manifest.to exists
+- Optional: verify sha256 hashes match after copy
+
+
+PART C — How the domain-first export was constructed (classification rules)
+
+Images are classified based on original paths.
+Primary mappings:
+- public/generated/style-previews/**  -> exports/style-previews/**
+- public/generated/services/**        -> exports/services/**
+- public/generated/transformations/** -> exports/transformations/**
+- public/generated/gallery/**         -> exports/gallery/**
+- public/generated/hero/**            -> exports/hero/**
+- public/generated/cta/**             -> exports/cta/**
+- public/brand/**                     -> exports/brand/**
+- public/generated/quiz/**            -> exports/misc/quiz/**
+
+Anything not matching these patterns falls back into:
+- exports/misc/<original relative path>
+
+Important exclusions to avoid duplication:
+- exports/ (do not re-export exports)
+- images_export_all/ (prior full mirror export)
+- public/generated_all_flat/ (derived flat export)
+- node_modules/, dist/, .git/, .cache/, .vercel/, coverage/
+
+
+PART D — Rebuilding the export from a source repo (optional regeneration)
+
+If you ever need to recreate the domain-first export automatically (for example after generating more assets), you can run a small Node script in the SOURCE repo.
+
+1) Create a temporary script (example name):
+  scripts/export_domain_images.mjs
+
+2) Paste the following script and run it from repo root with:
+  node scripts/export_domain_images.mjs
+
+SCRIPT (copy/paste):
+------------------------------------------------------------
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto';
+
+const IMAGE_EXTS = new Set(['.webp','.png','.jpg','.jpeg','.svg','.gif','.avif','.ico']);
+const EXCLUDE_DIR_NAMES = new Set(['node_modules','dist','.git','.cache','.vercel','coverage','exports','images_export_all']);
+
+function toPosix(p){ return p.split(path.sep).join('/'); }
+async function ensureDir(p){ await fs.mkdir(p,{recursive:true}); }
+
+async function walk(dir){
+  const out=[];
+  const entries=await fs.readdir(dir,{withFileTypes:true});
+  for(const e of entries){
+    const p=path.join(dir,e.name);
+    if(e.isDirectory()){
+      if(EXCLUDE_DIR_NAMES.has(e.name)) continue;
+      out.push(...(await walk(p)));
+    } else {
+      const ext=path.extname(e.name).toLowerCase();
+      if(IMAGE_EXTS.has(ext)) out.push(p);
+    }
+  }
+  return out;
+}
+
+async function sha256(filePath){
+  const buf=await fs.readFile(filePath);
+  return crypto.createHash('sha256').update(buf).digest('hex');
+}
+
+function classify(rel){
+  const r=rel.replace(/\\/g,'/');
+  if(r.startsWith('public/generated/style-previews/')) return {domain:'style-previews', sub:r.slice('public/generated/style-previews/'.length)};
+  if(r.startsWith('public/generated/services/')) return {domain:'services', sub:r.slice('public/generated/services/'.length)};
+  if(r.startsWith('public/generated/transformations/')) return {domain:'transformations', sub:r.slice('public/generated/transformations/'.length)};
+  if(r.startsWith('public/generated/gallery/')) return {domain:'gallery', sub:r.slice('public/generated/gallery/'.length)};
+  if(r.startsWith('public/generated/hero/')) return {domain:'hero', sub:r.slice('public/generated/hero/'.length)};
+  if(r.startsWith('public/generated/cta/')) return {domain:'cta', sub:r.slice('public/generated/cta/'.length)};
+  if(r.startsWith('public/brand/')) return {domain:'brand', sub:r.slice('public/brand/'.length)};
+  if(r.startsWith('public/generated/quiz/')) return {domain:'misc', sub:'quiz/' + r.slice('public/generated/quiz/'.length)};
+  if(r.startsWith('public/generated_all_flat/')) return null; // derived export; skip
+  return {domain:'misc', sub:r};
+}
+
+function sanitizeSubpath(sub){ return sub.replace(/[^a-zA-Z0-9._/-]/g,'_'); }
+
+async function main(){
+  const root=process.cwd();
+  const exportRoot=path.join(root,'exports');
+  await ensureDir(exportRoot);
+
+  const allAbs=await walk(root);
+  const seenDest=new Map();
+
+  const manifest={
+    createdAt:new Date().toISOString(),
+    exportRoot:'exports',
+    domains:['brand','hero','cta','services','gallery','transformations','style-previews','misc'],
+    total:0,
+    files:[]
+  };
+
+  for(const abs of allAbs){
+    const rel=path.relative(root,abs);
+    const c=classify(rel);
+    if(!c) continue;
+
+    const subSafe=sanitizeSubpath(c.sub);
+    const destBase=path.join(exportRoot,c.domain,subSafe);
+    await ensureDir(path.dirname(destBase));
+
+    let dest=destBase;
+    const key=toPosix(path.relative(root,destBase));
+    const count=seenDest.get(key) ?? 0;
+    if(count>0){
+      const ext=path.extname(destBase);
+      const withoutExt=destBase.slice(0,-ext.length);
+      dest=`${withoutExt}__${count+1}${ext}`;
+    }
+    seenDest.set(key,count+1);
+
+    const st=await fs.stat(abs);
+    await fs.copyFile(abs,dest);
+    const hash=await sha256(abs);
+
+    manifest.files.push({from:toPosix(rel), to:toPosix(path.relative(root,dest)), domain:c.domain, sizeBytes:st.size, sha256:hash});
+  }
+
+  manifest.total=manifest.files.length;
+  await fs.writeFile(path.join(root,'tmp_domain_export_manifest.json'), JSON.stringify(manifest,null,2),'utf8');
+  console.log(`Exported ${manifest.total} images to exports/`);
+}
+
+main().catch((e)=>{ console.error(e); process.exit(1); });
+------------------------------------------------------------
+
+3) Output
+- exports/ is created/updated
+- tmp_domain_export_manifest.json is written
+
+
+PART E — Integration guidance (how to reference assets in the new app)
+
+1) Reference patterns
+Once the export is copied into your app’s public/static path, you reference like:
+- /exports/hero/1000.webp
+- /exports/services/tape-in/700.webp
+- /exports/transformations/r1_after/400.webp
+- /exports/style-previews/extensions/extensions-natural-blend/ash/18/2000.webp
+
+2) Recommended additional manifest for the new app (optional)
+If you want to programmatically reference variants, build a small JSON index in the new app:
+- hero: {400,700,1000,2000}
+- cta:  {400,700,1000,2000}
+- services: by service id -> sizes
+- transformations: by transformation id + before/after -> sizes
+- style-previews: by preset/color/length -> sizes
+
+The existing manifest already contains everything needed to generate that index.
+
+
+PART F — Vite (same stack as this app): exact integration steps
+
+Target stack
+- React + Vite + Tailwind + React Router (HashRouter)
+- Deployed on Vercel (static assets served from the build output)
+
+Key rule (Vite)
+Vite serves static assets placed in the "public/" directory at runtime under the site root.
+That means:
+- public/exports/hero/700.webp is accessible at URL /exports/hero/700.webp
+
+Recommended approach (keeps the export structure AND avoids bloating deployments unnecessarily)
+You have two valid options depending on how you want to manage the asset set.
+
+Option 1 (simplest): commit the domain-first export under public/
+1) In the NEW app repo, create:
+   public/exports/
+2) Copy this repo’s domain-first folder into it:
+   (from) <this-repo>/exports/*
+   (to)   <new-repo>/public/exports/*
+3) Reference assets in code via absolute paths:
+   const hero400 = '/exports/hero/400.webp'
+4) Build + deploy:
+   npm install
+   npm run build
+
+Pros
+- No build step needed
+- Works in dev and prod automatically
+
+Cons
+- Increases repo size and Vercel deploy size
+
+
+Option 2 (recommended for cleanliness): keep exports/ at repo root and copy to public/exports during build
+This keeps the canonical export folder (exports/) out of the publicly served folder and lets you decide
+when/how to bundle it.
+
+Folder layout in new repo
+- exports/                    (copied from this repo; not auto-served)
+- public/exports/             (generated as part of build; served)
+
+1) Copy exports into new repo root:
+   (from) <this-repo>/exports
+   (to)   <new-repo>/exports
+
+2) Add a small copy step before build
+Add to package.json:
+
+  {
+    "scripts": {
+      "prebuild": "node -e \"const fs=require('fs'); const path=require('path'); const cp=(src,dst)=>{ if(!fs.existsSync(src)) return; fs.mkdirSync(dst,{recursive:true}); for(const ent of fs.readdirSync(src,{withFileTypes:true})){ const s=path.join(src,ent.name); const d=path.join(dst,ent.name); if(ent.isDirectory()) cp(s,d); else fs.copyFileSync(s,d); } }; cp('exports', 'public/exports');\"",
+      "build": "vite build"
+    }
+  }
+
+3) Run:
+   npm run build
+
+4) Reference assets via:
+   /exports/<domain>/<...>
+
+Pros
+- Keeps a clean separation between source assets and served assets
+- Easier to swap/replace exports as an artifact later
+
+Cons
+- Slightly more build scripting
+
+
+How to recreate the same structure (if you only have source assets and want to regenerate exports/)
+Use the script in PART D to generate exports/ from the original folder structure.
+
+
+Vercel notes
+- Large static assets can increase deploy size and build times.
+- If this image set becomes too large for your workflow, consider storing exports/ as a zip artifact
+  and downloading/unzipping in CI, then copying into public/exports at build time.
+
+
+PART G — What to do next
+
+If you tell me whether you prefer Option 1 (commit under public/) or Option 2 (build-time copy), I can:
+- adjust the scripts to your exact new repo
+- generate a small JS/TS helper that returns the correct srcSet for 400/700/1000/2000 variants
+- optionally generate a compact index JSON (hero/services/transformations/style-previews) for fast lookups

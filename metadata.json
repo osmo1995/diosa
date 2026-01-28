@@ -1,0 +1,7 @@
+{
+  "name": "Diosa Studio Yorkville",
+  "description": "Premium luxury hair extension studio landing page with AI-powered virtual preview and seamless booking flow.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

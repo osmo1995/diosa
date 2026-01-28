@@ -1,0 +1,31 @@
+{
+  "name": "diosa-studio-yorkville",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite",
+    "prebuild": "node scripts/copyExportsToPublic.mjs",
+    "build": "npx vite build",
+    "preview": "npx vite preview"
+  },
+  "dependencies": {
+    "@google/genai": "^1.38.0",
+    "@vercel/node": "^5.5.28",
+    "framer-motion": "^12.29.2",
+    "lucide-react": "^0.563.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.0"
+  },
+  "overrides": {
+    "path-to-regexp": "^6.3.0",
+    "undici": "^6.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
