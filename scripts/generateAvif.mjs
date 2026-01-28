@@ -3,16 +3,15 @@ import path from 'node:path';
 
 let sharp;
 try {
-  // dynamic import so local dev can run even if sharp isn't installed yet
   ({ default: sharp } = await import('sharp'));
-} catch (e) {
-  console.warn('[generateAvifToPublic] sharp not installed; skipping AVIF generation');
+} catch {
+  console.warn('[generateAvif] sharp not installed; skipping');
   process.exit(0);
 }
 
 const TARGETS = [
-  { base: path.join('public', 'exports', 'hero'), sizes: [400, 700, 1000, 2000] },
-  { base: path.join('public', 'exports', 'cta'), sizes: [400, 700, 1000, 2000] },
+  { base: path.join('exports', 'hero'), sizes: [400, 700, 1000, 2000] },
+  { base: path.join('exports', 'cta'), sizes: [400, 700, 1000, 2000] },
 ];
 
 async function ensureAvif(baseDir, size) {
@@ -21,7 +20,6 @@ async function ensureAvif(baseDir, size) {
 
   if (!fs.existsSync(webp)) return;
 
-  // Skip if AVIF exists and is newer than source.
   if (fs.existsSync(avif)) {
     const w = fs.statSync(webp).mtimeMs;
     const a = fs.statSync(avif).mtimeMs;
@@ -35,21 +33,20 @@ async function ensureAvif(baseDir, size) {
 
 async function main() {
   const started = Date.now();
-  let count = 0;
+  let generated = 0;
 
   for (const t of TARGETS) {
     if (!fs.existsSync(t.base)) continue;
     for (const s of t.sizes) {
       await ensureAvif(t.base, s);
-      count += 1;
+      generated += 1;
     }
   }
 
-  console.log(`[generateAvifToPublic] Done (${count} attempts) in ${Date.now() - started}ms`);
+  console.log(`[generateAvif] Done (${generated} attempts) in ${Date.now() - started}ms`);
 }
 
 main().catch((e) => {
-  console.warn('[generateAvifToPublic] Failed', e?.message ?? e);
-  // don’t fail build
+  console.warn('[generateAvif] Failed', e?.message ?? e);
   process.exit(0);
 });

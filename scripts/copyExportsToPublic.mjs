@@ -33,11 +33,10 @@ async function main() {
 
   copyDir(SRC_DIR, DEST_DIR);
 
-  // Generate AVIF for critical images into public/exports (build-time only; not committed).
+  // Generate AVIF for critical images into exports/ (build-time only; not committed),
+  // then copy to public/exports so they ship with the static output.
   try {
-    const { default: generateAvif } = await import('./generateAvifToPublic.mjs');
-    // module runs on import
-    void generateAvif;
+    await import('./generateAvif.mjs');
   } catch {
     // non-fatal
   }
