@@ -1,5 +1,8 @@
 -- Diosa Studio: store metadata about AI style generations
 
+-- Required for gen_random_uuid()
+create extension if not exists pgcrypto;
+
 create table if not exists public.style_generations (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),

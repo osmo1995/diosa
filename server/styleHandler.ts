@@ -72,6 +72,23 @@ Return ONLY the edited image.`;
     try {
       const supabase = getSupabaseAdmin();
 
+      // Ensure bucket exists (best-effort). Some projects start with no buckets.
+      try {
+        const { data: buckets } = await supabase.storage.listBuckets();
+        const exists = (buckets ?? []).some((b) => b.name === bucket);
+        if (!exists) {
+          const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').trim().toLowerCase() === 'true';
+          const { error: createErr } = await supabase.storage.createBucket(bucket, {
+            public: bucketPublic,
+          });
+          if (createErr) {
+            console.warn('[api/style] Failed to create bucket', { requestId, bucket, message: createErr.message });
+          }
+        }
+      } catch (e: any) {
+        console.warn('[api/style] Bucket ensure failed', { requestId, message: e?.message });
+      }
+
       const ext = outputMimeType.includes('png') ? 'png' : outputMimeType.includes('webp') ? 'webp' : 'jpg';
       const safePreset = body.preset.replace(/[^a-z0-9-]/gi, '_');
       const safeShade = body.shade.replace(/[^a-z0-9-]/gi, '_');

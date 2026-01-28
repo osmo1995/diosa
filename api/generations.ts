@@ -27,7 +27,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .order('created_at', { ascending: false })
       .limit(limit);
 
-    if (error) return sendJson(res as any, 500, { error: error.message, requestId });
+    if (error) {
+      const msg = error.message ?? 'Unknown error';
+      const schemaHint = msg.includes('schema cache') || msg.includes('Could not find the table');
+      return sendJson(res as any, 500, {
+        error: msg,
+        hint: schemaHint ? 'Run supabase_schema.sql in Supabase SQL Editor to create public.style_generations.' : undefined,
+        requestId,
+      });
+    }
 
     const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').trim().toLowerCase() === 'true';
     const ttl = Number((process.env.SUPABASE_SIGNED_URL_TTL_SECONDS ?? '3600').trim());
