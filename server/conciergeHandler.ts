@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { GoogleGenAI } from '@google/genai';
-import { allowMethods, readJsonBody, sendJson } from './apiUtils.js';
+import { allowMethods, readJsonBody, sendJson } from './apiUtils.ts';
 
 type ConciergeRequest = { query: string };
 

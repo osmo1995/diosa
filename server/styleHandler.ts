@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { GoogleGenAI } from '@google/genai';
-import { allowMethods, extractBase64Payload, readJsonBody, sendJson } from './apiUtils.js';
+import { allowMethods, extractBase64Payload, readJsonBody, sendJson } from './apiUtils.ts';
 
 type StyleRequest = {
   imageBase64: string; // can be data URL or raw base64
