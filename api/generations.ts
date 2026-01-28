@@ -10,7 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('x-request-id', requestId);
 
   try {
-    const adminToken = process.env.ADMIN_TOKEN;
+    const adminToken = process.env.ADMIN_TOKEN?.trim();
     if (adminToken) {
       const provided = req.headers['x-admin-token'];
       if (provided !== adminToken) {
@@ -29,8 +29,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (error) return sendJson(res as any, 500, { error: error.message, requestId });
 
-    const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').toLowerCase() === 'true';
-    const ttl = Number(process.env.SUPABASE_SIGNED_URL_TTL_SECONDS ?? 3600);
+    const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').trim().toLowerCase() === 'true';
+    const ttl = Number((process.env.SUPABASE_SIGNED_URL_TTL_SECONDS ?? '3600').trim());
 
     const items = await Promise.all(
       (data ?? []).map(async (row) => {

@@ -67,7 +67,7 @@ Return ONLY the edited image.`;
     // Persist to Supabase if configured
     let publicUrl: string | null = null;
     let storagePath: string | null = null;
-    const bucket = process.env.SUPABASE_STYLE_BUCKET ?? 'generated-previews';
+    const bucket = (process.env.SUPABASE_STYLE_BUCKET ?? 'generated-previews').trim();
 
     try {
       const supabase = getSupabaseAdmin();
@@ -89,8 +89,8 @@ Return ONLY the edited image.`;
         });
 
       if (!uploadError) {
-        const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').toLowerCase() === 'true';
-        const ttl = Number(process.env.SUPABASE_SIGNED_URL_TTL_SECONDS ?? 3600);
+        const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').trim().toLowerCase() === 'true';
+        const ttl = Number((process.env.SUPABASE_SIGNED_URL_TTL_SECONDS ?? '3600').trim());
 
         if (bucketPublic) {
           const pub = supabase.storage.from(bucket).getPublicUrl(storagePath);
@@ -125,7 +125,7 @@ Return ONLY the edited image.`;
       console.warn('[api/style] Supabase persistence skipped/failed', { requestId, message: e?.message });
     }
 
-    const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').toLowerCase() === 'true';
+    const bucketPublic = (process.env.SUPABASE_BUCKET_PUBLIC ?? 'false').trim().toLowerCase() === 'true';
 
     return sendJson(res, 200, {
       // Back-compat: return base64 only if requested.
