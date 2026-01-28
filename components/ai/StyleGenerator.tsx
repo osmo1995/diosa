@@ -196,7 +196,7 @@ export const StyleGenerator: React.FC = () => {
         >
           {result ? (
             <>
-              <img src={result} className="w-full h-full object-cover animate-fade-in" alt="Transformation" />
+              <img src={result} className="w-full h-full object-cover animate-fade-in" alt="Transformation" crossOrigin="anonymous" />
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] bg-white/90 backdrop-blur-md p-6 text-center shadow-xl">
                 <p className="font-serif text-xl uppercase tracking-widest mb-4">You look divine!</p>
                 <Button size="sm" onClick={() => window.location.hash = '/booking'}>Book This Style Now</Button>

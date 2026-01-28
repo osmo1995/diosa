@@ -1,5 +1,5 @@
 
-type StyleApiResponse = { imageBase64: string; mimeType: string };
+type StyleApiResponse = { imageBase64?: string; mimeType: string; publicUrl?: string | null };
 
 type ConciergeApiResponse = { text: string };
 
@@ -25,6 +25,7 @@ export const generateStylePreview = async (
         preset,
         shade,
         length,
+        includeBase64: false,
       }),
       signal: controller.signal,
     });
@@ -35,7 +36,10 @@ export const generateStylePreview = async (
     }
 
     const json = (await res.json()) as StyleApiResponse;
-    return asDataUrl(json.imageBase64, json.mimeType);
+
+    if (json.publicUrl) return json.publicUrl;
+    if (json.imageBase64) return asDataUrl(json.imageBase64, json.mimeType);
+    return null;
   } catch (e) {
     console.error('Style API error', e);
     return null;
