@@ -16,8 +16,25 @@
     <meta name="theme-color" content="#2B2B2B" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preload" as="image" href="/exports/hero/1000.avif" type="image/avif" imagesizes="100vw" />
-    <link rel="preload" as="image" href="/exports/hero/1000.webp" type="image/webp" imagesizes="100vw" />
+    <!-- Responsive hero preloads for better LCP request discovery -->
+    <link
+      rel="preload"
+      as="image"
+      href="/exports/hero/700.avif"
+      type="image/avif"
+      imagesrcset="/exports/hero/400.avif 400w, /exports/hero/700.avif 700w, /exports/hero/1000.avif 1000w, /exports/hero/2000.avif 2000w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/exports/hero/700.webp"
+      type="image/webp"
+      imagesrcset="/exports/hero/400.webp 400w, /exports/hero/700.webp 700w, /exports/hero/1000.webp 1000w, /exports/hero/2000.webp 2000w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
     <link rel="canonical" href="%VITE_SITE_URL%" />
 
     <meta property="og:type" content="website" />
