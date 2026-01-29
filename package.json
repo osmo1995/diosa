@@ -10,7 +10,8 @@
     "preview": "npx vite preview",
     "analyze": "npx vite build --mode production && node scripts/bundleReport.mjs",
     "smoke": "node scripts/smokeTest.mjs",
-    "verify:previews": "node scripts/verifyStylePreviews.mjs"
+    "verify:previews": "node scripts/verifyStylePreviews.mjs",
+    "generate:previews-map": "node scripts/generateStylePreviewAvailability.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",
