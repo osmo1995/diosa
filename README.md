@@ -17,6 +17,8 @@ View your app in AI Studio: https://ai.studio/apps/drive/1IxU2G0iWEP2wBOi2bW5Ru7
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Set `VITE_SITE_URL` (recommended) for canonical/OG/sitemap consistency (e.g. `https://diosa.vercel.app`)
+4. (Optional) Enable analytics by setting `VITE_GA_MEASUREMENT_ID` (GA4 Measurement ID)
+5. (Optional) Enable monitoring by setting `VITE_SENTRY_DSN`
 3. (Optional) Supabase persistence for generated images
    - Supabase dashboard checklist:
      1) Storage → create bucket `generated-previews` (recommended: **Private**)

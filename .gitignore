@@ -30,3 +30,9 @@ exports/**/*.avif
 *.sln
 *.sw?
 .vercel
+
+# RovoDev / agent artifacts
+.rovodev/
+
+# Supabase CLI temp
+supabase/.temp/
