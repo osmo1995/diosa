@@ -66,9 +66,11 @@ export const Gallery: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredItems.map((item, idx) => (
             <AnimatedSection key={item.id} delay={idx * 0.1}>
-              <div 
-                className="group relative cursor-pointer overflow-hidden aspect-[3/4]"
+              <button
+                type="button"
+                className="group relative cursor-pointer overflow-hidden aspect-[3/4] text-left"
                 onClick={() => openLightbox(idx)}
+                aria-label={`Open image: ${item.title}`}
               >
                 <OptimizedImage 
                   src={item.url} 
@@ -80,7 +82,7 @@ export const Gallery: React.FC = () => {
                   <p className="text-white font-serif text-2xl uppercase tracking-widest">{item.title}</p>
                   <p className="text-divine-gold text-[10px] uppercase tracking-widest font-bold mt-2">{item.category}</p>
                 </div>
-              </div>
+              </button>
             </AnimatedSection>
           ))}
         </div>

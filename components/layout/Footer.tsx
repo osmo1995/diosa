@@ -18,8 +18,22 @@ export const Footer: React.FC = () => {
             Experience the "Goddess" transformation in the heart of Yorkville.
           </p>
           <div className="flex space-x-4">
-            <a href="#" aria-label="Instagram" className="hover:text-divine-gold transition-colors"><Instagram size={20} /></a>
-            <a href="#" aria-label="Facebook" className="hover:text-divine-gold transition-colors"><Facebook size={20} /></a>
+            <button
+              type="button"
+              aria-label="Instagram (coming soon)"
+              className="hover:text-divine-gold transition-colors"
+              onClick={() => alert('Instagram coming soon')}
+            >
+              <Instagram size={20} />
+            </button>
+            <button
+              type="button"
+              aria-label="Facebook (coming soon)"
+              className="hover:text-divine-gold transition-colors"
+              onClick={() => alert('Facebook coming soon')}
+            >
+              <Facebook size={20} />
+            </button>
             <a href="mailto:hello@diosayorkville.com" aria-label="Email Diosa Studio" className="hover:text-divine-gold transition-colors"><Mail size={20} /></a>
           </div>
         </div>
@@ -70,8 +84,8 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 mt-20 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-soft-champagne/70 font-bold">
         <p>&copy; 2024 Diosa Studio Yorkville. All Rights Reserved.</p>
         <div className="flex space-x-6 mt-4 md:mt-0">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <button type="button" className="hover:text-white" onClick={() => alert('Privacy Policy coming soon')}>Privacy Policy</button>
+          <button type="button" className="hover:text-white" onClick={() => alert('Terms of Service coming soon')}>Terms of Service</button>
         </div>
       </div>
     </footer>
