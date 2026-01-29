@@ -88,13 +88,14 @@ export const extensionColors: {
   group: ExtensionColorGroup;
   section: ExtensionColorSection;
   subsection?: ExtensionColorSubsection;
+  popular?: boolean;
 }[] = [
   // Blondes
   { id: 'butter-blonde', label: 'Butter Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden' },
-  { id: 'honey', label: 'Honey Bronde', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden' },
+  { id: 'honey', label: 'Honey Bronde', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden', popular: true },
   { id: 'sun-kissed', label: 'Sun-Kissed Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden' },
-  { id: 'caramel-bronde', label: 'Caramel Bronde', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden' },
-  { id: 'champagne', label: 'Champagne', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden' },
+  { id: 'caramel-bronde', label: 'Caramel Bronde', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden', popular: true },
+  { id: 'champagne', label: 'Champagne', group: 'Blondes', section: 'Blondes', subsection: 'Warm & Golden', popular: true },
 
   { id: 'platinum-icy', label: 'Platinum Icy', group: 'Blondes', section: 'Blondes', subsection: 'Cool & Icy' },
   { id: 'icy-pearl', label: 'Icy Pearl', group: 'Blondes', section: 'Blondes', subsection: 'Cool & Icy' },
@@ -106,14 +107,14 @@ export const extensionColors: {
   { id: 'frosted-vanilla', label: 'Frosted Vanilla', group: 'Blondes', section: 'Blondes', subsection: 'Cool & Icy' },
   { id: 'cool-beige', label: 'Cool Beige', group: 'Blondes', section: 'Blondes', subsection: 'Cool & Icy' },
 
-  { id: 'old-money', label: 'Old Money Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
+  { id: 'old-money', label: 'Old Money Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted', popular: true },
   { id: 'beige', label: 'Beige Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'vanilla-cream', label: 'Vanilla Cream', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'sandy-beige', label: 'Sandy Beige', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'smoky-bronde', label: 'Smoky Bronde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'rooted-ash', label: 'Rooted Ash Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'bright-blonde', label: 'Bright Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
-  { id: 'rooted-vanilla', label: 'Rooted Vanilla', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
+  { id: 'rooted-vanilla', label: 'Rooted Vanilla', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted', popular: true },
   { id: 'shadow-root-blonde', label: 'Shadow Root Blonde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'melted-beige', label: 'Melted Beige', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
   { id: 'lived-in-bronde', label: 'Lived-In Bronde', group: 'Blondes', section: 'Blondes', subsection: 'Dimensional & Rooted' },
@@ -122,17 +123,17 @@ export const extensionColors: {
 
   // Brunettes
   { id: 'neutral-gloss', label: 'Neutral Gloss', group: 'Brunettes', section: 'Brunettes', subsection: 'Neutral' },
-  { id: 'chocolate-mocha', label: 'Chocolate Mocha', group: 'Brunettes', section: 'Brunettes', subsection: 'Neutral' },
+  { id: 'chocolate-mocha', label: 'Chocolate Mocha', group: 'Brunettes', section: 'Brunettes', subsection: 'Neutral', popular: true },
 
   { id: 'smoky-mocha', label: 'Smoky Mocha', group: 'Brunettes', section: 'Brunettes', subsection: 'Cool' },
   { id: 'cool-chestnut', label: 'Cool Chestnut', group: 'Brunettes', section: 'Brunettes', subsection: 'Cool' },
 
   { id: 'deep-espresso-melt', label: 'Deep Espresso Melt', group: 'Brunettes', section: 'Brunettes', subsection: 'Rich' },
-  { id: 'espresso', label: 'Rich Espresso', group: 'Brunettes', section: 'Brunettes', subsection: 'Rich' },
+  { id: 'espresso', label: 'Rich Espresso', group: 'Brunettes', section: 'Brunettes', subsection: 'Rich', popular: true },
   { id: 'soft-black', label: 'Soft Black', group: 'Brunettes', section: 'Brunettes', subsection: 'Rich' },
 
   // Reds
-  { id: 'copper-glow', label: 'Copper Glow', group: 'Reds', section: 'Reds', subsection: 'Copper' },
+  { id: 'copper-glow', label: 'Copper Glow', group: 'Reds', section: 'Reds', subsection: 'Copper', popular: true },
   { id: 'cinnamon-spice', label: 'Cinnamon Spice', group: 'Reds', section: 'Reds', subsection: 'Copper' },
 
   { id: 'auburn-velvet', label: 'Auburn Velvet', group: 'Reds', section: 'Reds', subsection: 'Auburn & Deep' },

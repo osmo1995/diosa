@@ -149,19 +149,50 @@ export const StyleGenerator: React.FC = () => {
               }
 
               const sectionOrder = ['Blondes', 'Brunettes', 'Reds'];
+
+              const popular = availableShades.filter((c) => (c as any).popular);
+              const renderShadeButtons = (shades: typeof availableShades) => (
+                <div className="flex flex-wrap gap-2">
+                  {shades.map((c) => (
+                    <button
+                      type="button"
+                      key={c.id}
+                      onClick={() => setShade(c.id)}
+                      className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold border transition-all ${
+                        shade === c.id
+                          ? 'bg-deep-charcoal text-white border-deep-charcoal'
+                          : 'border-gray-200 hover:border-deep-charcoal'
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
+              );
               const subsectionOrder: Record<string, string[]> = {
                 Blondes: ['Warm & Golden', 'Cool & Icy', 'Dimensional & Rooted'],
                 Brunettes: ['Neutral', 'Cool', 'Rich'],
                 Reds: ['Copper', 'Auburn & Deep'],
               };
 
-              return sectionOrder
-                .filter((s) => sections.has(s))
-                .map((section) => {
+              return (
+                <>
+                  {popular.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
+                        Most Popular
+                      </div>
+                      {renderShadeButtons(popular)}
+                    </div>
+                  )}
+
+                  {sectionOrder
+                    .filter((s) => sections.has(s))
+                    .map((section) => {
                   const subMap = sections.get(section)!;
                   const subs = subsectionOrder[section] ?? Array.from(subMap.keys());
 
-                  return (
+                      return (
                     <div key={section} className="space-y-3">
                       <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
                         {section}
@@ -174,27 +205,14 @@ export const StyleGenerator: React.FC = () => {
                             <div className="text-[10px] uppercase tracking-widest font-bold text-gray-400">
                               {sub}
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                              {subMap.get(sub)!.map((c) => (
-                                <button
-                                  type="button"
-                                  key={c.id}
-                                  onClick={() => setShade(c.id)}
-                                  className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold border transition-all ${
-                                    shade === c.id
-                                      ? 'bg-deep-charcoal text-white border-deep-charcoal'
-                                      : 'border-gray-200 hover:border-deep-charcoal'
-                                  }`}
-                                >
-                                  {c.label}
-                                </button>
-                              ))}
-                            </div>
+                            {renderShadeButtons(subMap.get(sub)!)}
                           </div>
                         ))}
                     </div>
                   );
-                });
+                    })}
+                </>
+              );
             })()}
           </div>
 
