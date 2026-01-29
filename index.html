@@ -32,7 +32,8 @@
       (function () {
         // Optional GA4 (enabled only when VITE_GA_MEASUREMENT_ID is set)
         var gaId = "%VITE_GA_MEASUREMENT_ID%";
-        if (gaId && gaId.indexOf('%VITE_GA_MEASUREMENT_ID%') === -1) {
+        // Fail-closed: only enable GA if the ID is a real GA4 Measurement ID (G-XXXX...)
+        if (/^G-[A-Z0-9]+$/.test(gaId)) {
           var s1 = document.createElement('script');
           s1.async = true;
           s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
