@@ -77,6 +77,8 @@ export const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-white z-[60] flex flex-col items-center justify-center space-y-8 lg:hidden animate-fade-in">
           <button 
+            type="button"
+            aria-label="Close menu"
             className="absolute top-6 right-6 p-2"
             onClick={() => setIsMobileMenuOpen(false)}
           >

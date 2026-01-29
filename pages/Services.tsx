@@ -36,7 +36,7 @@ export const Services: React.FC = () => {
                   </div>
 
                   <div className="p-8">
-                    <div className="text-[10px] uppercase tracking-widest font-bold text-gray-400">{s.duration} • {s.price}</div>
+                    <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">{s.duration} • {s.price}</div>
                     <h2 className="text-2xl font-serif uppercase tracking-widest mt-3 mb-4">{s.title}</h2>
                     <p className="text-gray-600 leading-relaxed mb-6">{s.longDescription}</p>
 

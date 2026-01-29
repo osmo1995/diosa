@@ -18,9 +18,9 @@ export const Footer: React.FC = () => {
             Experience the "Goddess" transformation in the heart of Yorkville.
           </p>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-divine-gold transition-colors"><Instagram size={20} /></a>
-            <a href="#" className="hover:text-divine-gold transition-colors"><Facebook size={20} /></a>
-            <a href="#" className="hover:text-divine-gold transition-colors"><Mail size={20} /></a>
+            <a href="#" aria-label="Instagram" className="hover:text-divine-gold transition-colors"><Instagram size={20} /></a>
+            <a href="#" aria-label="Facebook" className="hover:text-divine-gold transition-colors"><Facebook size={20} /></a>
+            <a href="mailto:hello@diosayorkville.com" aria-label="Email Diosa Studio" className="hover:text-divine-gold transition-colors"><Mail size={20} /></a>
           </div>
         </div>
 
@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 mt-20 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-soft-champagne/40 font-bold">
+      <div className="max-w-7xl mx-auto px-6 mt-20 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-soft-champagne/70 font-bold">
         <p>&copy; 2024 Diosa Studio Yorkville. All Rights Reserved.</p>
         <div className="flex space-x-6 mt-4 md:mt-0">
           <a href="#">Privacy Policy</a>

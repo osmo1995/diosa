@@ -74,7 +74,7 @@ export const Contact: React.FC = () => {
       case 1:
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif uppercase tracking-widest mb-8">Select Your Transformation</h3>
+            <h2 className="text-2xl font-serif uppercase tracking-widest mb-8">Select Your Transformation</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="group" aria-label="Service selection">
               {services.map(s => (
                 <button
@@ -111,7 +111,7 @@ export const Contact: React.FC = () => {
       case 2:
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif uppercase tracking-widest mb-8">Desired Length & Volume</h3>
+            <h2 className="text-2xl font-serif uppercase tracking-widest mb-8">Desired Length & Volume</h2>
             <div className="grid grid-cols-1 gap-4">
               {['Natural Volume (18")', 'Hollywood Length (22")', 'Mermaid Dreams (24"+)'].map(l => (
                 <button
@@ -137,7 +137,7 @@ export const Contact: React.FC = () => {
       case 3:
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif uppercase tracking-widest mb-8">Preferred Date</h3>
+            <h2 className="text-2xl font-serif uppercase tracking-widest mb-8">Preferred Date</h2>
             <div className="space-y-4">
               <input 
                 type="date" 
@@ -157,7 +157,7 @@ export const Contact: React.FC = () => {
       case 4:
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif uppercase tracking-widest mb-8">Contact Information</h3>
+            <h2 className="text-2xl font-serif uppercase tracking-widest mb-8">Contact Information</h2>
             <div className="grid grid-cols-1 gap-6">
               <div>
                 <textarea

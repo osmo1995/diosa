@@ -204,7 +204,7 @@ export const Home: React.FC = () => {
                 
                 <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-6">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Method Used</p>
+                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-500">Method Used</p>
                     <p className="text-xl font-serif tracking-widest uppercase">{transformations[activeTransform].method}</p>
                   </div>
                   <div className="flex space-x-2">

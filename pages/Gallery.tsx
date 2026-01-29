@@ -93,6 +93,8 @@ export const Gallery: React.FC = () => {
           onClick={closeLightbox}
         >
           <button 
+            type="button"
+            aria-label="Close image"
             className="absolute top-6 right-6 text-white hover:text-divine-gold transition-colors"
             onClick={closeLightbox}
           >
@@ -100,6 +102,8 @@ export const Gallery: React.FC = () => {
           </button>
           
           <button 
+            type="button"
+            aria-label="Previous image"
             className="absolute left-6 top-1/2 -translate-y-1/2 text-white hover:text-divine-gold transition-colors p-4"
             onClick={prevImage}
           >
@@ -117,13 +121,15 @@ export const Gallery: React.FC = () => {
               <h3 className="text-3xl font-serif uppercase tracking-widest text-divine-gold mb-2">
                 {filteredItems[selectedIdx].title}
               </h3>
-              <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-gray-300">
                 Category: {filteredItems[selectedIdx].category}
               </p>
             </div>
           </div>
 
           <button 
+            type="button"
+            aria-label="Next image"
             className="absolute right-6 top-1/2 -translate-y-1/2 text-white hover:text-divine-gold transition-colors p-4"
             onClick={nextImage}
           >
