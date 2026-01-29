@@ -6,7 +6,9 @@ export type ExtensionPreset =
   | 'extensions-sleek-straight'
   | 'extensions-glam-density'
   | 'extensions-luxe-curl'
-  | 'extensions-rooted-bronde';
+  | 'extensions-rooted-bronde'
+  | 'extensions-butterfly-layers'
+  | 'extensions-bombshell-blowout';
 
 export type ExtensionColor =
   | 'old-money'
@@ -40,7 +42,13 @@ export type ExtensionColor =
   | 'melted-beige'
   | 'lived-in-bronde'
   | 'smudge-root-ash'
-  | 'mushroom-blonde';
+  | 'mushroom-blonde'
+  | 'cool-chestnut'
+  | 'deep-espresso-melt'
+  | 'smoky-mocha'
+  | 'cherry-cola'
+  | 'auburn-velvet'
+  | 'cinnamon-spice';
 
 export type ExtensionLength = '14' | '18' | '22' | '24';
 
@@ -53,6 +61,8 @@ export const extensionPresets: { id: ExtensionPreset; label: string; description
   { id: 'extensions-glam-density', label: 'Glam Density', description: 'High-impact fullness with a camera-ready finish.' },
   { id: 'extensions-luxe-curl', label: 'Luxe Curl', description: 'Defined curl pattern with a soft, elevated bounce.' },
   { id: 'extensions-rooted-bronde', label: 'Rooted Bronde', description: 'Dimensional bronde with a natural root melt.' },
+  { id: 'extensions-butterfly-layers', label: 'Butterfly Layers', description: 'Face-framing layers with airy movement and shape.' },
+  { id: 'extensions-bombshell-blowout', label: 'Bombshell Blowout', description: 'High-volume blowout with bouncy, glossy body.' },
 ];
 
 export const extensionColors: {
@@ -96,11 +106,17 @@ export const extensionColors: {
   // Brunettes
   { id: 'neutral-gloss', label: 'Neutral Gloss', group: 'Brunettes' },
   { id: 'chocolate-mocha', label: 'Chocolate Mocha', group: 'Brunettes' },
+  { id: 'smoky-mocha', label: 'Smoky Mocha', group: 'Brunettes' },
+  { id: 'cool-chestnut', label: 'Cool Chestnut', group: 'Brunettes' },
+  { id: 'deep-espresso-melt', label: 'Deep Espresso Melt', group: 'Brunettes' },
   { id: 'espresso', label: 'Rich Espresso', group: 'Brunettes' },
   { id: 'soft-black', label: 'Soft Black', group: 'Brunettes' },
 
   // Reds
   { id: 'copper-glow', label: 'Copper Glow', group: 'Reds' },
+  { id: 'auburn-velvet', label: 'Auburn Velvet', group: 'Reds' },
+  { id: 'cinnamon-spice', label: 'Cinnamon Spice', group: 'Reds' },
+  { id: 'cherry-cola', label: 'Cherry Cola', group: 'Reds' },
 ];
 
 // NOTE: Available lengths depend on preset+color. See stylePreviewAvailability.
