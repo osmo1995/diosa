@@ -34,7 +34,13 @@ export type ExtensionColor =
   | 'nordic-blonde'
   | 'platinum-smoke'
   | 'cool-beige'
-  | 'frosted-vanilla';
+  | 'frosted-vanilla'
+  | 'rooted-vanilla'
+  | 'shadow-root-blonde'
+  | 'melted-beige'
+  | 'lived-in-bronde'
+  | 'smudge-root-ash'
+  | 'mushroom-blonde';
 
 export type ExtensionLength = '14' | '18' | '22' | '24';
 
@@ -78,6 +84,14 @@ export const extensionColors: {
   { id: 'platinum-smoke', label: 'Platinum Smoke', group: 'Blondes' },
   { id: 'cool-beige', label: 'Cool Beige', group: 'Blondes' },
   { id: 'frosted-vanilla', label: 'Frosted Vanilla', group: 'Blondes' },
+
+  // Dimensional / rooted blondes
+  { id: 'rooted-vanilla', label: 'Rooted Vanilla', group: 'Blondes' },
+  { id: 'shadow-root-blonde', label: 'Shadow Root Blonde', group: 'Blondes' },
+  { id: 'melted-beige', label: 'Melted Beige', group: 'Blondes' },
+  { id: 'lived-in-bronde', label: 'Lived-In Bronde', group: 'Blondes' },
+  { id: 'smudge-root-ash', label: 'Smudge Root Ash', group: 'Blondes' },
+  { id: 'mushroom-blonde', label: 'Mushroom Blonde', group: 'Blondes' },
 
   // Brunettes
   { id: 'neutral-gloss', label: 'Neutral Gloss', group: 'Brunettes' },
