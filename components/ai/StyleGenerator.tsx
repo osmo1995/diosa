@@ -27,35 +27,21 @@ export const StyleGenerator: React.FC = () => {
   const [shade, setShade] = useState<ExtensionColor>('champagne');
   const [length, setLength] = useState<ExtensionLength>('22');
 
-  const availableShades = useMemo(() => {
+  // We list all styles/colors/lengths in the UI, even if we don't have a static thumbnail preview.
+  // Availability is used only to decide whether a preset preview image exists.
+  const availableShades = extensionColors;
+  const availableLengths = extensionLengths;
+
+  const hasStaticPreview = useMemo(() => {
     const avail = stylePreviewAvailability[preset] as Record<string, readonly string[]> | undefined;
-    const ids = new Set(Object.keys(avail ?? {}));
-    return extensionColors.filter((c) => ids.has(c.id));
-  }, [preset]);
-
-  const availableLengths = useMemo(() => {
-    const avail = stylePreviewAvailability[preset] as Record<string, readonly string[]> | undefined;
-    const lengths = (avail?.[shade] ?? []) as readonly string[];
-    const ids = new Set(lengths);
-    return extensionLengths.filter((l) => ids.has(l.id));
-  }, [preset, shade]);
-
-  // Keep selection valid as user changes preset/shade.
-  useEffect(() => {
-    if (!availableShades.some((c) => c.id === shade) && availableShades[0]) {
-      setShade(availableShades[0].id);
-    }
-  }, [availableShades, shade]);
-
-  useEffect(() => {
-    if (!availableLengths.some((l) => l.id === length) && availableLengths[0]) {
-      setLength(availableLengths[0].id);
-    }
-  }, [availableLengths, length]);
+    const lengthsForShade = avail?.[shade] ?? [];
+    return lengthsForShade.includes(length);
+  }, [preset, shade, length]);
 
   const selectedPreview = useMemo(() => {
+    if (!hasStaticPreview) return null;
     return getExtensionPreviewUrl({ preset, color: shade, length, size: 700 });
-  }, [preset, shade, length]);
+  }, [preset, shade, length, hasStaticPreview]);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -190,8 +176,17 @@ export const StyleGenerator: React.FC = () => {
           {/* Preview thumbnail (static, from exports) */}
           <div className="border border-gray-100 bg-white p-4">
             <div className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-3">Preset Preview</div>
-            <div className="aspect-[3/4] overflow-hidden bg-soft-champagne">
-              <OptimizedImage src={selectedPreview} alt="Selected preset preview" className="w-full h-full" />
+            <div className="aspect-[3/4] overflow-hidden bg-soft-champagne flex items-center justify-center">
+              {selectedPreview ? (
+                <OptimizedImage src={selectedPreview} alt="Selected preset preview" className="w-full h-full" />
+              ) : (
+                <div className="p-6 text-center">
+                  <p className="text-xs uppercase tracking-widest font-bold text-gray-600">Preview coming soon</p>
+                  <p className="text-xs text-gray-500 mt-2">
+                    This combination will still generate via AI when you click <span className="font-semibold">Generate</span>.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

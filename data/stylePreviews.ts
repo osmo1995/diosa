@@ -2,7 +2,11 @@ export type ExtensionPreset =
   | 'extensions-natural-blend'
   | 'extensions-volume-set'
   | 'extensions-length-set'
-  | 'extensions-soft-waves';
+  | 'extensions-soft-waves'
+  | 'extensions-sleek-straight'
+  | 'extensions-glam-density'
+  | 'extensions-luxe-curl'
+  | 'extensions-rooted-bronde';
 
 export type ExtensionColor =
   | 'old-money'
@@ -11,7 +15,12 @@ export type ExtensionColor =
   | 'ash'
   | 'honey'
   | 'espresso'
-  | 'platinum-icy';
+  | 'platinum-icy'
+  | 'neutral-gloss'
+  | 'caramel-bronde'
+  | 'chocolate-mocha'
+  | 'copper-glow'
+  | 'soft-black';
 
 export type ExtensionLength = '14' | '18' | '22' | '24';
 
@@ -20,16 +29,34 @@ export const extensionPresets: { id: ExtensionPreset; label: string; description
   { id: 'extensions-volume-set', label: 'Volume Set', description: 'Fuller ends and lifted density through mids.' },
   { id: 'extensions-length-set', label: 'Length Set', description: 'Clean length with a polished fall.' },
   { id: 'extensions-soft-waves', label: 'Soft Waves', description: 'Soft movement with a luxury finish.' },
+  { id: 'extensions-sleek-straight', label: 'Sleek Straight', description: 'Silky, polished straight finish with shine.' },
+  { id: 'extensions-glam-density', label: 'Glam Density', description: 'High-impact fullness with a camera-ready finish.' },
+  { id: 'extensions-luxe-curl', label: 'Luxe Curl', description: 'Defined curl pattern with a soft, elevated bounce.' },
+  { id: 'extensions-rooted-bronde', label: 'Rooted Bronde', description: 'Dimensional bronde with a natural root melt.' },
 ];
 
-export const extensionColors: { id: ExtensionColor; label: string; group: 'Blondes' | 'Brunettes' }[] = [
+export const extensionColors: {
+  id: ExtensionColor;
+  label: string;
+  group: 'Blondes' | 'Brunettes' | 'Reds';
+}[] = [
+  // Blondes / Bronde
   { id: 'platinum-icy', label: 'Platinum Icy', group: 'Blondes' },
   { id: 'old-money', label: 'Old Money Blonde', group: 'Blondes' },
   { id: 'champagne', label: 'Champagne', group: 'Blondes' },
   { id: 'beige', label: 'Beige Blonde', group: 'Blondes' },
   { id: 'ash', label: 'Cool Ash', group: 'Blondes' },
   { id: 'honey', label: 'Honey Bronde', group: 'Blondes' },
+  { id: 'caramel-bronde', label: 'Caramel Bronde', group: 'Blondes' },
+
+  // Brunettes
+  { id: 'neutral-gloss', label: 'Neutral Gloss', group: 'Brunettes' },
+  { id: 'chocolate-mocha', label: 'Chocolate Mocha', group: 'Brunettes' },
   { id: 'espresso', label: 'Rich Espresso', group: 'Brunettes' },
+  { id: 'soft-black', label: 'Soft Black', group: 'Brunettes' },
+
+  // Reds
+  { id: 'copper-glow', label: 'Copper Glow', group: 'Reds' },
 ];
 
 // NOTE: Available lengths depend on preset+color. See stylePreviewAvailability.
