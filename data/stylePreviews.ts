@@ -20,7 +20,15 @@ export type ExtensionColor =
   | 'caramel-bronde'
   | 'chocolate-mocha'
   | 'copper-glow'
-  | 'soft-black';
+  | 'soft-black'
+  | 'butter-blonde'
+  | 'vanilla-cream'
+  | 'sandy-beige'
+  | 'pearl-blonde'
+  | 'sun-kissed'
+  | 'smoky-bronde'
+  | 'rooted-ash'
+  | 'bright-blonde';
 
 export type ExtensionLength = '14' | '18' | '22' | '24';
 
@@ -48,6 +56,14 @@ export const extensionColors: {
   { id: 'ash', label: 'Cool Ash', group: 'Blondes' },
   { id: 'honey', label: 'Honey Bronde', group: 'Blondes' },
   { id: 'caramel-bronde', label: 'Caramel Bronde', group: 'Blondes' },
+  { id: 'butter-blonde', label: 'Butter Blonde', group: 'Blondes' },
+  { id: 'vanilla-cream', label: 'Vanilla Cream', group: 'Blondes' },
+  { id: 'sandy-beige', label: 'Sandy Beige', group: 'Blondes' },
+  { id: 'pearl-blonde', label: 'Pearl Blonde', group: 'Blondes' },
+  { id: 'sun-kissed', label: 'Sun-Kissed Blonde', group: 'Blondes' },
+  { id: 'smoky-bronde', label: 'Smoky Bronde', group: 'Blondes' },
+  { id: 'rooted-ash', label: 'Rooted Ash Blonde', group: 'Blondes' },
+  { id: 'bright-blonde', label: 'Bright Blonde', group: 'Blondes' },
 
   // Brunettes
   { id: 'neutral-gloss', label: 'Neutral Gloss', group: 'Brunettes' },
