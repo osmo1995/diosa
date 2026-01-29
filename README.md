@@ -10,6 +10,21 @@ View your app in AI Studio: https://ai.studio/apps/drive/1IxU2G0iWEP2wBOi2bW5Ru7
 
 ## Run Locally
 
+## Real-device test checklist (iPhone + Android)
+- Home: hero loads fast, text readable, CTA buttons tappable (44px+)
+- Nav: open/close menu, focus trap not broken, links route correctly
+- Booking: complete steps, required field errors display, success screen shows summary
+- Style Generator: previews load, generation works, saved link copy works
+- Gallery: open/close lightbox, swipe/scroll behavior, keyboard focus
+- Performance: check LCP/CLS visually on cellular
+
+## Lighthouse checklist (official)
+Run from Chrome DevTools Lighthouse:
+- Mobile + Desktop
+- Record Performance/Accessibility/Best Practices/SEO
+- Note LCP/CLS/INP and top opportunities
+
+
 **Prerequisites:**  Node.js
 
 

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { submitBooking } from '../services/bookingService';
 import { CheckCircle, Calendar, Sparkles, User, Scissors } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
@@ -18,7 +19,8 @@ export const Contact: React.FC = () => {
     date: '',
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    message: ''
   });
 
   const validateStep = (s: number) => {
@@ -158,6 +160,15 @@ export const Contact: React.FC = () => {
             <h3 className="text-2xl font-serif uppercase tracking-widest mb-8">Contact Information</h3>
             <div className="grid grid-cols-1 gap-6">
               <div>
+                <textarea
+                  name="message"
+                  placeholder="Notes (optional) — hair goals, prior extensions, timing"
+                  value={formData.message ?? ''}
+                  onChange={(e) => updateForm('message', e.target.value)}
+                  className="w-full p-4 border-b-2 border-gray-100 focus:border-divine-gold outline-none text-base transition-all min-h-[90px]"
+                />
+              </div>
+              <div>
                 <input 
                   name="name"
                   type="text" 
@@ -198,7 +209,29 @@ export const Contact: React.FC = () => {
                 onClick={async () => {
                   if (!validateStep(4)) return;
                   setIsSubmitting(true);
-                  await new Promise((r) => setTimeout(r, 600));
+                  const resp = await submitBooking({
+                    service: formData.service,
+                    length: formData.length,
+                    date: formData.date,
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    message: formData.message,
+                  });
+
+                  if (!resp.ok) {
+                    setIsSubmitting(false);
+                    setSubmitted(false);
+                    // Map server validation errors if present
+                    if (resp.errors) {
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      setErrors(resp.errors as any);
+                      return;
+                    }
+                    alert(resp.error || 'Booking request failed. Please try again.');
+                    return;
+                  }
+
                   setSubmitted(true);
                   setIsSubmitting(false);
                   setStep(5);
@@ -220,8 +253,35 @@ export const Contact: React.FC = () => {
             <p className="text-gray-500 max-w-md mx-auto leading-relaxed">
               Thank you, {formData.name}. Our studio coordinator will contact you within 24 hours to finalize your {formData.service} transformation.
             </p>
-            <div className="pt-8">
+            <div className="max-w-xl mx-auto text-left bg-soft-champagne/40 border border-gray-100 p-6 mt-6">
+              <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-3">Request Summary</div>
+              <div className="text-sm text-gray-700 space-y-1">
+                <div><span className="text-gray-500">Service:</span> {formData.service}</div>
+                <div><span className="text-gray-500">Length:</span> {formData.length}</div>
+                <div><span className="text-gray-500">Date:</span> {formData.date}</div>
+                <div><span className="text-gray-500">Name:</span> {formData.name}</div>
+                <div><span className="text-gray-500">Email:</span> {formData.email}</div>
+                <div><span className="text-gray-500">Phone:</span> {formData.phone}</div>
+                {formData.message && <div><span className="text-gray-500">Notes:</span> {formData.message}</div>}
+              </div>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <Button size="sm" variant="outline" onClick={() => window.print()}>Print</Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setSubmitted(false);
+                    setStep(1);
+                    setFormData({ service: '', length: '', date: '', name: '', email: '', phone: '', message: '' });
+                  }}
+                >
+                  New Booking
+                </Button>
+              </div>
+            </div>
+
+            <div className="pt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" onClick={() => window.location.hash = '/'}>Return Home</Button>
+              <Button size="lg" variant="outline" onClick={() => window.location.hash = '/services'}>Explore Methods</Button>
             </div>
           </div>
         );
