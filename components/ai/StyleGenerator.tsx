@@ -134,22 +134,68 @@ export const StyleGenerator: React.FC = () => {
           {/* Shade */}
           <div className="space-y-4">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">Shade</p>
-            <div className="flex flex-wrap gap-2">
-              {availableShades.map((c) => (
-                <button
-                  type="button"
-                  key={c.id}
-                  onClick={() => setShade(c.id)}
-                  className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold border transition-all ${
-                    shade === c.id
-                      ? 'bg-deep-charcoal text-white border-deep-charcoal'
-                      : 'border-gray-200 hover:border-deep-charcoal'
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
-            </div>
+
+            {(() => {
+              const sections = new Map<string, Map<string, typeof availableShades>>();
+
+              for (const c of availableShades) {
+                const section = (c as any).section ?? c.group;
+                const subsection = (c as any).subsection ?? 'Other';
+
+                if (!sections.has(section)) sections.set(section, new Map());
+                const subMap = sections.get(section)!;
+                if (!subMap.has(subsection)) subMap.set(subsection, []);
+                subMap.get(subsection)!.push(c);
+              }
+
+              const sectionOrder = ['Blondes', 'Brunettes', 'Reds'];
+              const subsectionOrder: Record<string, string[]> = {
+                Blondes: ['Warm & Golden', 'Cool & Icy', 'Dimensional & Rooted'],
+                Brunettes: ['Neutral', 'Cool', 'Rich'],
+                Reds: ['Copper', 'Auburn & Deep'],
+              };
+
+              return sectionOrder
+                .filter((s) => sections.has(s))
+                .map((section) => {
+                  const subMap = sections.get(section)!;
+                  const subs = subsectionOrder[section] ?? Array.from(subMap.keys());
+
+                  return (
+                    <div key={section} className="space-y-3">
+                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
+                        {section}
+                      </div>
+
+                      {subs
+                        .filter((sub) => subMap.has(sub))
+                        .map((sub) => (
+                          <div key={`${section}-${sub}`} className="space-y-2">
+                            <div className="text-[10px] uppercase tracking-widest font-bold text-gray-400">
+                              {sub}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {subMap.get(sub)!.map((c) => (
+                                <button
+                                  type="button"
+                                  key={c.id}
+                                  onClick={() => setShade(c.id)}
+                                  className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold border transition-all ${
+                                    shade === c.id
+                                      ? 'bg-deep-charcoal text-white border-deep-charcoal'
+                                      : 'border-gray-200 hover:border-deep-charcoal'
+                                  }`}
+                                >
+                                  {c.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  );
+                });
+            })()}
           </div>
 
           {/* Length */}
