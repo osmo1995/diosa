@@ -145,7 +145,7 @@ export const Contact: React.FC = () => {
                 onChange={(e) => updateForm('date', e.target.value)}
                 className="w-full p-6 border-2 border-gray-100 focus:border-divine-gold outline-none text-lg transition-all"
               />
-              <p className="text-xs text-gray-400 italic">Please note: This is a request, not a confirmed appointment.</p>
+              <p className="text-xs text-gray-600 italic">Please note: This is a request, not a confirmed appointment.</p>
             </div>
             {errors.date && <p className="text-sm text-red-600">{errors.date}</p>}
             <div className="flex justify-between pt-8">
@@ -309,12 +309,12 @@ export const Contact: React.FC = () => {
               return (
                 <div key={s.name} className="flex flex-col items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
-                    isActive ? 'bg-divine-gold text-deep-charcoal' : 'bg-gray-100 text-gray-400'
+                    isActive ? 'bg-divine-gold text-deep-charcoal' : 'bg-gray-100 text-gray-600'
                   } ${isCurrent ? 'ring-4 ring-divine-gold/20 scale-110' : ''}`}>
                     <Icon size={18} />
                   </div>
                   <span className={`text-[10px] uppercase tracking-widest font-bold mt-2 hidden md:block ${
-                    isActive ? 'text-divine-gold' : 'text-gray-400'
+                    isActive ? 'text-divine-gold' : 'text-gray-600'
                   }`}>
                     {s.name}
                   </span>

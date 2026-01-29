@@ -208,8 +208,22 @@ export const Home: React.FC = () => {
                     <p className="text-xl font-serif tracking-widest uppercase">{transformations[activeTransform].method}</p>
                   </div>
                   <div className="flex space-x-2">
-                    <button onClick={prevTransform} className="p-3 border border-gray-200 hover:bg-divine-gold hover:border-divine-gold transition-all"><ChevronLeft size={20} /></button>
-                    <button onClick={nextTransform} className="p-3 border border-gray-200 hover:bg-divine-gold hover:border-divine-gold transition-all"><ChevronRight size={20} /></button>
+                    <button
+                      type="button"
+                      onClick={prevTransform}
+                      aria-label="Previous transformation"
+                      className="p-3 border border-gray-200 hover:bg-divine-gold hover:border-divine-gold transition-all"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={nextTransform}
+                      aria-label="Next transformation"
+                      className="p-3 border border-gray-200 hover:bg-divine-gold hover:border-divine-gold transition-all"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
                   </div>
                 </div>
               </div>

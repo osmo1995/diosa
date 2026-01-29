@@ -1,5 +1,34 @@
 
 import React, { Suspense } from 'react';
+
+type AnimatePresenceType = React.ComponentType<{
+  children: React.ReactNode;
+  mode?: 'wait' | 'sync' | 'popLayout';
+}>;
+
+const MotionGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [AnimatePresence, setAnimatePresence] = React.useState<AnimatePresenceType | null>(null);
+
+  React.useEffect(() => {
+    let mounted = true;
+    import('framer-motion')
+      .then((m) => {
+        if (mounted) setAnimatePresence(() => m.AnimatePresence as AnimatePresenceType);
+      })
+      .catch(() => {
+        // If framer-motion fails to load for any reason, fall back to no animations.
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!AnimatePresence) return <>{children}</>;
+
+  return <AnimatePresence mode="wait">{children}</AnimatePresence>;
+};
+
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
