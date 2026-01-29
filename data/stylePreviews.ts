@@ -28,7 +28,13 @@ export type ExtensionColor =
   | 'sun-kissed'
   | 'smoky-bronde'
   | 'rooted-ash'
-  | 'bright-blonde';
+  | 'bright-blonde'
+  | 'icy-pearl'
+  | 'silver-ash'
+  | 'nordic-blonde'
+  | 'platinum-smoke'
+  | 'cool-beige'
+  | 'frosted-vanilla';
 
 export type ExtensionLength = '14' | '18' | '22' | '24';
 
@@ -64,6 +70,14 @@ export const extensionColors: {
   { id: 'smoky-bronde', label: 'Smoky Bronde', group: 'Blondes' },
   { id: 'rooted-ash', label: 'Rooted Ash Blonde', group: 'Blondes' },
   { id: 'bright-blonde', label: 'Bright Blonde', group: 'Blondes' },
+
+  // Cool / icy blondes
+  { id: 'icy-pearl', label: 'Icy Pearl', group: 'Blondes' },
+  { id: 'silver-ash', label: 'Silver Ash', group: 'Blondes' },
+  { id: 'nordic-blonde', label: 'Nordic Blonde', group: 'Blondes' },
+  { id: 'platinum-smoke', label: 'Platinum Smoke', group: 'Blondes' },
+  { id: 'cool-beige', label: 'Cool Beige', group: 'Blondes' },
+  { id: 'frosted-vanilla', label: 'Frosted Vanilla', group: 'Blondes' },
 
   // Brunettes
   { id: 'neutral-gloss', label: 'Neutral Gloss', group: 'Brunettes' },
