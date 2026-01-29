@@ -28,26 +28,6 @@
     <meta name="twitter:description" content="Luxury hair extensions in Yorkville, Toronto — comfort-first installs, rooted blends, daylight-proof results." />
     <meta name="twitter:image" content="%VITE_SITE_URL%/exports/hero/1000.webp" />
 
-    <script>
-      (function () {
-        // Optional GA4 (enabled only when VITE_GA_MEASUREMENT_ID is set)
-        var gaId = "%VITE_GA_MEASUREMENT_ID%";
-        var gaEnabled = "%VITE_ENABLE_GA%";
-        // Fail-closed: only enable GA if explicitly enabled AND the ID is a real GA4 Measurement ID (G-XXXX...)
-        if (gaEnabled === 'true' && /^G-[A-Z0-9]+$/.test(gaId)) {
-          var s1 = document.createElement('script');
-          s1.async = true;
-          s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
-          document.head.appendChild(s1);
-
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);} // eslint-disable-line
-          gtag('js', new Date());
-          gtag('config', gaId);
-        }
-      })();
-    </script>
-
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
