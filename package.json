@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx vite",
-    "prebuild": "node scripts/copyExportsToPublic.mjs",
+    "prebuild": "node scripts/prebuild.mjs",
     "build": "npx vite build",
     "preview": "npx vite preview",
     "analyze": "npx vite build --mode production && node scripts/bundleReport.mjs",

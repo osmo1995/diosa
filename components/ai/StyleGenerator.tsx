@@ -19,7 +19,9 @@ export const StyleGenerator: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const [preset, setPreset] = useState<ExtensionPreset>('extensions-natural-blend');
   const [shade, setShade] = useState<ExtensionColor>('champagne');
@@ -72,6 +74,8 @@ export const StyleGenerator: React.FC = () => {
 
     const output = await generateStylePreview(image, preset, shade, length);
     setResult(output);
+    setResultUrl(output && output.startsWith('http') ? output : null);
+    setCopied(false);
 
     if (!output) {
       setError('We could not generate a preview right now. Please try again in a moment.');
@@ -225,8 +229,32 @@ export const StyleGenerator: React.FC = () => {
             <>
               <img src={result} className="w-full h-full object-cover animate-fade-in" alt="Transformation" crossOrigin="anonymous" />
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] bg-white/90 backdrop-blur-md p-6 text-center shadow-xl">
-                <p className="font-serif text-xl uppercase tracking-widest mb-4">You look divine!</p>
-                <Button size="sm" onClick={() => window.location.hash = '/booking'}>Book This Style Now</Button>
+                <p className="font-serif text-xl uppercase tracking-widest mb-3">You look divine!</p>
+                {resultUrl && (
+                  <div className="text-xs text-gray-600 mb-4">
+                    <span className="inline-block px-3 py-1 bg-divine-gold/15 text-deep-charcoal font-bold uppercase tracking-widest">Saved</span>
+                  </div>
+                )}
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button size="sm" onClick={() => window.location.hash = '/booking'}>Book This Style Now</Button>
+                  {resultUrl && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(resultUrl);
+                          setCopied(true);
+                          window.setTimeout(() => setCopied(false), 1500);
+                        } catch {
+                          setCopied(false);
+                        }
+                      }}
+                    >
+                      {copied ? 'Link Copied' : 'Copy Link'}
+                    </Button>
+                  )}
+                </div>
               </div>
             </>
           ) : (
@@ -241,6 +269,9 @@ export const StyleGenerator: React.FC = () => {
                 <div className="flex flex-col items-center">
                   <p className="font-serif text-2xl uppercase tracking-widest text-deep-charcoal">Preview Unavailable</p>
                   <p className="text-sm mt-2 text-gray-600">{error}</p>
+                  <div className="mt-6">
+                    <Button size="sm" variant="outline" onClick={startGeneration} disabled={!image}>Retry</Button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex flex-col items-center opacity-40">
