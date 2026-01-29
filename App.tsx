@@ -1,7 +1,6 @@
 
 import React, { Suspense } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { ScrollToTop } from './components/ui/ScrollToTop';
@@ -51,7 +50,7 @@ const App: React.FC = () => {
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow">
-          <AnimatePresence mode="wait">
+          <MotionGate>
             <Suspense
               fallback={
                 <div className="pt-40 pb-24 bg-goddess-white">
@@ -72,7 +71,7 @@ const App: React.FC = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
-          </AnimatePresence>
+          </MotionGate>
         </main>
         <Footer />
 
