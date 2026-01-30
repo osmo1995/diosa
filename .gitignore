@@ -34,5 +34,13 @@ exports/**/*.avif
 # RovoDev / agent artifacts
 .rovodev/
 
+# Local ComfyUI (do not commit)
+ComfyUI/
+
+# Local generation runners / artifacts (do not commit)
+tmp_rovodev_*
+workflow_*.json
+exports/style-previews-variants/
+
 # Supabase CLI temp
 supabase/.temp/
