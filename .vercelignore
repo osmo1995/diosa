@@ -1,0 +1,17 @@
+# Exclude local ComfyUI runtime + large model files from Vercel uploads
+ComfyUI/
+
+# Exclude local generation runners/artifacts
+.rovodev/
+tmp_rovodev_*
+workflow_*.json
+exports/style-previews-variants/
+
+# Exclude common model weights
+**/*.safetensors
+**/*.ckpt
+**/*.pt
+**/*.pth
+
+# Optional: exclude local output logs
+*.log
