@@ -7,6 +7,7 @@ tmp_rovodev_*
 workflow_*.json
 exports/style-previews-variants/
 exports/style-previews-desktop/
+exports/style-previews-desktop-flat/
 
 # Exclude common model weights
 **/*.safetensors
