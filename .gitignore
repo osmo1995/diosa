@@ -41,6 +41,7 @@ ComfyUI/
 tmp_rovodev_*
 workflow_*.json
 exports/style-previews-variants/
+exports/style-previews-desktop/
 
 # Supabase CLI temp
 supabase/.temp/

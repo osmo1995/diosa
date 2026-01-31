@@ -6,6 +6,7 @@ ComfyUI/
 tmp_rovodev_*
 workflow_*.json
 exports/style-previews-variants/
+exports/style-previews-desktop/
 
 # Exclude common model weights
 **/*.safetensors
