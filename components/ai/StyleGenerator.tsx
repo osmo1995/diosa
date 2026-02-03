@@ -136,21 +136,9 @@ export const StyleGenerator: React.FC = () => {
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">Shade</p>
 
             {(() => {
-              const sections = new Map<string, Map<string, typeof availableShades>>();
-
-              for (const c of availableShades) {
-                const section = (c as any).section ?? c.group;
-                const subsection = (c as any).subsection ?? 'Other';
-
-                if (!sections.has(section)) sections.set(section, new Map());
-                const subMap = sections.get(section)!;
-                if (!subMap.has(subsection)) subMap.set(subsection, []);
-                subMap.get(subsection)!.push(c);
-              }
-
-              const sectionOrder = ['Blondes', 'Brunettes', 'Reds'];
-
               const popular = availableShades.filter((c) => (c as any).popular);
+              const nonPopular = availableShades.filter((c) => !(c as any).popular);
+
               const renderShadeButtons = (shades: typeof availableShades) => (
                 <div className="flex flex-wrap gap-2">
                   {shades.map((c) => (
@@ -169,49 +157,23 @@ export const StyleGenerator: React.FC = () => {
                   ))}
                 </div>
               );
-              const subsectionOrder: Record<string, string[]> = {
-                Blondes: ['Warm & Golden', 'Cool & Icy', 'Dimensional & Rooted'],
-                Brunettes: ['Neutral', 'Cool', 'Rich'],
-                Reds: ['Copper', 'Auburn & Deep'],
-              };
 
               return (
-                <>
+                <div className="space-y-5">
                   {popular.length > 0 && (
                     <div className="space-y-2">
-                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
-                        Most Popular
-                      </div>
+                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">Most Popular</div>
                       {renderShadeButtons(popular)}
                     </div>
                   )}
 
-                  {sectionOrder
-                    .filter((s) => sections.has(s))
-                    .map((section) => {
-                  const subMap = sections.get(section)!;
-                  const subs = subsectionOrder[section] ?? Array.from(subMap.keys());
-
-                      return (
-                    <div key={section} className="space-y-3">
-                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
-                        {section}
-                      </div>
-
-                      {subs
-                        .filter((sub) => subMap.has(sub))
-                        .map((sub) => (
-                          <div key={`${section}-${sub}`} className="space-y-2">
-                            <div className="text-[10px] uppercase tracking-widest font-bold text-gray-400">
-                              {sub}
-                            </div>
-                            {renderShadeButtons(subMap.get(sub)!)}
-                          </div>
-                        ))}
+                  {nonPopular.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">All Shades</div>
+                      {renderShadeButtons(nonPopular)}
                     </div>
-                  );
-                    })}
-                </>
+                  )}
+                </div>
               );
             })()}
           </div>

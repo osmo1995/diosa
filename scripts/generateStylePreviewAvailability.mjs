@@ -12,14 +12,48 @@ function listDirs(p) {
     .sort();
 }
 
-const presets = listDirs(ROOT);
+// Filter availability to only the curated preset/color lists defined in data/stylePreviews.ts.
+function readCuratedIds() {
+  const tsPath = path.join('data', 'stylePreviews.ts');
+  if (!fs.existsSync(tsPath)) return null;
+  const ts = fs.readFileSync(tsPath, 'utf8');
+
+  const sliceBetween = (startNeedle, endNeedle) => {
+    const s = ts.indexOf(startNeedle);
+    if (s === -1) return '';
+    const e = ts.indexOf(endNeedle, s);
+    if (e === -1) return ts.slice(s);
+    return ts.slice(s, e + endNeedle.length);
+  };
+
+  const extractIds = (block) => {
+    const ids = [];
+    const re = /\bid\s*:\s*'([^']+)'/g;
+    let m;
+    while ((m = re.exec(block))) ids.push(m[1]);
+    return Array.from(new Set(ids));
+  };
+
+  const presetsBlock = sliceBetween('export const extensionPresets', '];');
+  const colorsBlock = sliceBetween('export const extensionColors', '];');
+  return {
+    presets: extractIds(presetsBlock),
+    colors: extractIds(colorsBlock),
+  };
+}
+
+const curated = readCuratedIds();
+const curatedPresets = curated?.presets?.length ? curated.presets : listDirs(ROOT);
 
 const availability = {};
-for (const preset of presets) {
+for (const preset of curatedPresets) {
   const presetDir = path.join(ROOT, preset);
-  const colors = listDirs(presetDir);
+  const colorsOnDisk = listDirs(presetDir);
+  const curatedColors = curated?.colors?.length ? curated.colors : colorsOnDisk;
+
   availability[preset] = {};
-  for (const color of colors) {
+  for (const color of curatedColors) {
+    if (!colorsOnDisk.includes(color)) continue;
     const colorDir = path.join(presetDir, color);
     const lengths = listDirs(colorDir);
     availability[preset][color] = lengths;
