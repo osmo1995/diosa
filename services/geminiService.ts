@@ -22,9 +22,20 @@ export const generateStylePreview = async (
   const timeout = window.setTimeout(() => controller.abort(), 90_000);
 
   try {
+    // If signed in, attach Supabase JWT so server can enforce per-user quotas.
+    let accessToken: string | null = null;
+    try {
+      const { supabaseClient } = await import('./supabaseClient');
+      const s = supabaseClient ? await supabaseClient.auth.getSession() : null;
+      accessToken = s?.data?.session?.access_token ?? null;
+    } catch {}
+
     const res = await fetch('/api/style', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
       body: JSON.stringify({
         imageBase64: base64Image,
         preset,
@@ -36,8 +47,12 @@ export const generateStylePreview = async (
     });
 
     if (!res.ok) {
-      console.error('Style API failed', res.status, await res.text());
-      return null;
+      const txt = await res.text();
+      console.error('Style API failed', res.status, txt);
+      // Surface quota errors to the UI.
+      if (res.status === 401) throw new Error('auth_required');
+      if (res.status === 402) throw new Error('quota_exhausted');
+      throw new Error(`style_api_${res.status}`);
     }
 
     const json = (await res.json()) as StyleApiResponse;

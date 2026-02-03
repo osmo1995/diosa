@@ -22,7 +22,8 @@
     "lucide-react": "^0.563.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.0",
+    "stripe": "^17.5.0"
   },
   "overrides": {
     "path-to-regexp": "^6.3.0",

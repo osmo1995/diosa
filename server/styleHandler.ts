@@ -25,10 +25,92 @@ export async function handleStyle(req: IncomingMessage, res: ServerResponse, api
     const key = apiKey ?? process.env.GEMINI_API_KEY;
     if (!key) return sendJson(res, 500, { error: 'Missing GEMINI_API_KEY on server', requestId });
 
+    // Require auth so we can enforce per-user quotas.
+    const authHeader = req.headers['authorization'];
+    const authValue = (Array.isArray(authHeader) ? authHeader[0] : authHeader)?.toString() ?? '';
+    const m = authValue.match(/^Bearer\s+(.+)$/i);
+    const token = m ? m[1] : null;
+    if (!token) return sendJson(res, 401, { error: 'Authentication required', requestId });
+
+    const supabase = getSupabaseAdmin();
+    const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+    if (userErr || !userData?.user) return sendJson(res, 401, { error: 'Unauthorized', requestId });
+
+    const userId = userData.user.id;
+
     const body = await readJsonBody<StyleRequest>(req);
     if (!body?.imageBase64) return sendJson(res, 400, { error: 'imageBase64 is required', requestId });
 
     const { base64, mimeType } = extractBase64Payload(body.imageBase64);
+
+    // Enforce monthly free quota (15) + paid credits.
+    const freeLimit = 15;
+    const now = new Date();
+    const periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+    const periodStartIso = periodStart.toISOString().slice(0, 10); // date
+
+    const { data: usageRow, error: usageErr } = await supabase
+      .from('user_generation_usage')
+      .select('user_id,period_start,free_used,paid_credits')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (usageErr) {
+      return sendJson(res, 500, { error: `Usage lookup failed: ${usageErr.message}`, requestId });
+    }
+
+    const rowPeriod = usageRow?.period_start ? new Date(usageRow.period_start).toISOString().slice(0, 10) : null;
+    const isSamePeriod = rowPeriod === periodStartIso;
+    const freeUsed = isSamePeriod ? usageRow?.free_used ?? 0 : 0;
+    const paidCredits = usageRow?.paid_credits ?? 0;
+
+    const hasFree = freeUsed < freeLimit;
+    const hasPaid = paidCredits > 0;
+
+    if (!hasFree && !hasPaid) {
+      return sendJson(res, 402, {
+        error: 'Free quota exhausted',
+        requestId,
+        quota: {
+          periodStart: periodStartIso,
+          freeLimit,
+          freeUsed,
+          freeRemaining: 0,
+          paidCredits,
+        },
+      });
+    }
+
+    // Update usage before generating (fail-closed; keep it atomic enough via upsert).
+    const nextFreeUsed = hasFree ? freeUsed + 1 : freeUsed;
+    const nextPaidCredits = !hasFree && hasPaid ? paidCredits - 1 : paidCredits;
+
+    const { error: upsertErr } = await supabase.from('user_generation_usage').upsert(
+      {
+        user_id: userId,
+        period_start: periodStartIso,
+        free_used: nextFreeUsed,
+        paid_credits: nextPaidCredits,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id' }
+    );
+
+    if (upsertErr) {
+      return sendJson(res, 500, { error: `Usage update failed: ${upsertErr.message}`, requestId });
+    }
+
+    // Log event best-effort
+    try {
+      await supabase.from('generation_events').insert({
+        user_id: userId,
+        kind: hasFree ? 'free' : 'paid_credit',
+        preset: body.preset,
+        shade: body.shade,
+        length: body.length,
+        request_id: requestId,
+      });
+    } catch {}
 
     const ai = new GoogleGenAI({ apiKey: key });
 

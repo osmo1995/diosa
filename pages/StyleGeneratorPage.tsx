@@ -2,6 +2,26 @@
 import React from 'react';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { StyleGenerator } from '../components/ai/StyleGenerator';
+import { SignInPanel } from '../components/auth/SignInPanel';
+import { useAuth } from '../services/auth';
+
+const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, loading, supabaseReady } = useAuth();
+
+  if (!supabaseReady) return <SignInPanel />;
+  if (loading) {
+    return (
+      <div className="bg-white border border-gray-100 shadow-lg rounded-2xl p-8">
+        <div className="h-6 w-40 bg-gray-200 animate-pulse mb-3" />
+        <div className="h-4 w-full max-w-md bg-gray-200 animate-pulse" />
+      </div>
+    );
+  }
+
+  if (!user) return <SignInPanel />;
+
+  return <>{children}</>;
+};
 
 export const StyleGeneratorPage: React.FC = () => {
   return (
@@ -17,7 +37,9 @@ export const StyleGeneratorPage: React.FC = () => {
         </AnimatedSection>
 
         <AnimatedSection delay={0.2}>
-          <StyleGenerator />
+          <AuthGate>
+            <StyleGenerator />
+          </AuthGate>
         </AnimatedSection>
       </div>
     </div>
