@@ -31,15 +31,15 @@ async function main() {
     fs.rmSync(DEST_DIR, { recursive: true, force: true });
   }
 
-  copyDir(SRC_DIR, DEST_DIR);
-
-  // Generate AVIF for critical images into exports/ (build-time only; not committed),
-  // then copy to public/exports so they ship with the static output.
+  // Generate AVIF for critical images into exports/ (build-time only; not committed).
+  // IMPORTANT: generate first, then copy exports -> public/exports so AVIF files ship.
   try {
     await import('./generateAvif.mjs');
   } catch {
     // non-fatal
   }
+
+  copyDir(SRC_DIR, DEST_DIR);
 
   const stat = fs.statSync(DEST_DIR);
   console.log(`[copyExportsToPublic] Copied '${SRC_DIR}' -> '${DEST_DIR}' (mtime=${stat.mtime.toISOString()})`);
