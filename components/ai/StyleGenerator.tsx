@@ -326,6 +326,18 @@ export const StyleGenerator: React.FC = () => {
                 </Button>
               )}
 
+              {!paywall.open && billingPacks.length > 0 && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    className="text-xs font-semibold uppercase tracking-widest text-gray-600 hover:text-deep-charcoal"
+                    onClick={() => setPaywall({ open: true, message: 'Buy credits (optional).' })}
+                  >
+                    Buy credits
+                  </button>
+                </div>
+              )}
+
               <div className="mt-2 text-xs text-gray-500 leading-snug">
                 Tip: your selection preview updates instantly; render only when you’re ready.
               </div>

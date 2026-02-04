@@ -46,3 +46,4 @@ exports/style-previews-desktop-flat/
 
 # Supabase CLI temp
 supabase/.temp/
+.env*.local
