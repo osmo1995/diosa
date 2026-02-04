@@ -9,10 +9,25 @@ try {
   process.exit(0);
 }
 
-const TARGETS = [
+export const DEFAULT_TARGETS = [
   { base: path.join('exports', 'hero'), sizes: [400, 700, 1000, 2000] },
   { base: path.join('exports', 'cta'), sizes: [400, 700, 1000, 2000] },
 ];
+
+export async function generateAvifForTargets(targets = DEFAULT_TARGETS) {
+  const started = Date.now();
+  let generated = 0;
+
+  for (const t of targets) {
+    if (!fs.existsSync(t.base)) continue;
+    for (const s of t.sizes) {
+      await ensureAvif(t.base, s);
+      generated += 1;
+    }
+  }
+
+  console.log(`[generateAvif] Done (${generated} attempts) in ${Date.now() - started}ms`);
+}
 
 async function ensureAvif(baseDir, size) {
   const webp = path.join(baseDir, `${size}.webp`);
@@ -32,18 +47,7 @@ async function ensureAvif(baseDir, size) {
 }
 
 async function main() {
-  const started = Date.now();
-  let generated = 0;
-
-  for (const t of TARGETS) {
-    if (!fs.existsSync(t.base)) continue;
-    for (const s of t.sizes) {
-      await ensureAvif(t.base, s);
-      generated += 1;
-    }
-  }
-
-  console.log(`[generateAvif] Done (${generated} attempts) in ${Date.now() - started}ms`);
+  await generateAvifForTargets(DEFAULT_TARGETS);
 }
 
 main().catch((e) => {

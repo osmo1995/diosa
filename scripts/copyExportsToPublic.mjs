@@ -32,7 +32,6 @@ async function main() {
   }
 
   // Generate AVIF for critical images into exports/ (build-time only; not committed).
-  // IMPORTANT: generate first, then copy exports -> public/exports so AVIF files ship.
   try {
     await import('./generateAvif.mjs');
   } catch {
@@ -40,6 +39,17 @@ async function main() {
   }
 
   copyDir(SRC_DIR, DEST_DIR);
+
+  // ALSO generate AVIF directly inside public/exports so preferAvif never 404s in production.
+  try {
+    const { generateAvifForTargets } = await import('./generateAvif.mjs');
+    await generateAvifForTargets([
+      { base: path.join('public', 'exports', 'hero'), sizes: [400, 700, 1000, 2000] },
+      { base: path.join('public', 'exports', 'cta'), sizes: [400, 700, 1000, 2000] },
+    ]);
+  } catch {
+    // non-fatal
+  }
 
   const stat = fs.statSync(DEST_DIR);
   console.log(`[copyExportsToPublic] Copied '${SRC_DIR}' -> '${DEST_DIR}' (mtime=${stat.mtime.toISOString()})`);
