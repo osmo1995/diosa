@@ -30,6 +30,9 @@ export const StyleGenerator: React.FC = () => {
   const [billingPacks, setBillingPacks] = useState<
     { priceId: string; label: string; credits: number; amountUsd: number }[]
   >([]);
+  const [billingTiers, setBillingTiers] = useState<
+    { priceId: string; label: string; creditsIncluded: number; amountUsdMonthly: number }[]
+  >([]);
 
   const [preset, setPreset] = useState<ExtensionPreset>('extensions-natural-blend');
   const [shade, setShade] = useState<ExtensionColor>('champagne');
@@ -53,6 +56,7 @@ export const StyleGenerator: React.FC = () => {
         if (!r.ok) return;
         const j = await r.json();
         if (Array.isArray(j.packs)) setBillingPacks(j.packs);
+        if (Array.isArray(j.tiers)) setBillingTiers(j.tiers);
       } catch {}
     }
 
@@ -280,29 +284,53 @@ export const StyleGenerator: React.FC = () => {
                 <div className="text-sm text-red-700 mb-3">{error}</div>
               )}
 
-              {paywall.open && billingPacks.length > 0 ? (
+              {paywall.open && (billingPacks.length > 0 || billingTiers.length > 0) ? (
                 <div className="space-y-3">
-                  <div className="text-sm text-gray-700">
-                    {paywall.message ?? 'Free quota exhausted.'}
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {billingPacks.map((p) => (
-                      <Button
-                        key={p.priceId}
-                        size="lg"
-                        variant="primary"
-                        onClick={async () => {
-                          const { startCheckout } = await import('../../services/billingService');
-                          await startCheckout(p.priceId, 'payment', 1);
-                        }}
-                      >
-                        {p.credits} for ${p.amountUsd}
-                      </Button>
-                    ))}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Credits are added instantly after checkout completes.
-                  </div>
+                  <div className="text-sm text-gray-700">{paywall.message ?? 'Choose an option.'}</div>
+
+                  {billingPacks.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">Credit packs</div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {billingPacks.map((p) => (
+                          <Button
+                            key={p.priceId}
+                            size="lg"
+                            variant="primary"
+                            onClick={async () => {
+                              const { startCheckout } = await import('../../services/billingService');
+                              await startCheckout(p.priceId, 'payment', 1);
+                            }}
+                          >
+                            {p.credits} for ${p.amountUsd}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {billingTiers.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-[10px] uppercase tracking-widest font-bold text-gray-500">Subscriptions</div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {billingTiers.map((t) => (
+                          <Button
+                            key={t.priceId}
+                            size="lg"
+                            variant="secondary"
+                            onClick={async () => {
+                              const { startCheckout } = await import('../../services/billingService');
+                              await startCheckout(t.priceId, 'subscription');
+                            }}
+                          >
+                            {t.label} · ${t.amountUsdMonthly}/mo · {t.creditsIncluded} included
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-xs text-gray-500">Credits are added after successful payment.</div>
                 </div>
               ) : (
                 <Button
@@ -326,15 +354,26 @@ export const StyleGenerator: React.FC = () => {
                 </Button>
               )}
 
-              {!paywall.open && billingPacks.length > 0 && (
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    className="text-xs font-semibold uppercase tracking-widest text-gray-600 hover:text-deep-charcoal"
-                    onClick={() => setPaywall({ open: true, message: 'Buy credits (optional).' })}
-                  >
-                    Buy credits
-                  </button>
+              {!paywall.open && (billingPacks.length > 0 || billingTiers.length > 0) && (
+                <div className="mt-3 flex items-center gap-4">
+                  {billingPacks.length > 0 && (
+                    <button
+                      type="button"
+                      className="text-xs font-semibold uppercase tracking-widest text-gray-600 hover:text-deep-charcoal"
+                      onClick={() => setPaywall({ open: true, message: 'Buy credits (optional).' })}
+                    >
+                      Buy credits
+                    </button>
+                  )}
+                  {billingTiers.length > 0 && (
+                    <button
+                      type="button"
+                      className="text-xs font-semibold uppercase tracking-widest text-gray-600 hover:text-deep-charcoal"
+                      onClick={() => setPaywall({ open: true, message: 'Subscribe (optional).' })}
+                    >
+                      Subscribe
+                    </button>
+                  )}
                 </div>
               )}
 

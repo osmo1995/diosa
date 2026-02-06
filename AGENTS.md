@@ -384,6 +384,13 @@ node scripts/generateStylePreviews.mjs --category=extensions --force \
 
 ## 🚦 Deployment Process
 
+### Hero/CTA AVIF note (important)
+The homepage hero and CTA use `<OptimizedImage preferAvif>` which requests `.avif` assets under `/exports/...`.
+Those AVIF files are generated at build time by `scripts/generateAvif.mjs` and must be copied into `public/exports`.
+This is handled by `scripts/copyExportsToPublic.mjs` (runs in `npm run prebuild`).
+If you deploy with Vercel CLI, avoid `--prebuilt` unless you have run `npm run build` (which runs prebuild).
+
+
 ### **Standard Deploy (Recommended)**
 ```bash
 # 1. Make changes
