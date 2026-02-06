@@ -14,10 +14,11 @@ export const SignInPanel: React.FC = () => {
     setLoading(true);
     setStatus(null);
     try {
+      const redirectTo = `${window.location.origin}/#/style-generator`;
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.href,
+          redirectTo,
         },
       });
       if (error) setStatus(error.message);
@@ -32,10 +33,11 @@ export const SignInPanel: React.FC = () => {
     setLoading(true);
     setStatus(null);
     try {
+      const emailRedirectTo = `${window.location.origin}/#/style-generator`;
       const { error } = await supabaseClient.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: window.location.href,
+          emailRedirectTo,
         },
       });
       if (error) setStatus(error.message);

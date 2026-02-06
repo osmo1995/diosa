@@ -24,6 +24,15 @@ const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export const StyleGeneratorPage: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  React.useEffect(() => {
+    // Safety net: if auth callback lands elsewhere, send authenticated users here.
+    if (!loading && user && window.location.hash !== '#/style-generator') {
+      window.location.hash = '/style-generator';
+    }
+  }, [loading, user]);
+
   return (
     <div className="pt-40 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
