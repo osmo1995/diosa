@@ -1,4 +1,6 @@
-# Exclude local ComfyUI runtime + large model files from Vercel uploads
+# Vercel ignore rules
+
+# Exclude local ComfyUI runtime + large model files
 ComfyUI/
 
 # Exclude local generation runners/artifacts
@@ -17,3 +19,52 @@ exports/style-previews-desktop-flat/
 
 # Optional: exclude local output logs
 *.log
+
+# --- Reduce style preview payload (ONLY deploy curated set) ---
+# Exclude all style preview images by default
+exports/style-previews/extensions/**
+
+# Re-include curated presets
+!exports/style-previews/extensions/extensions-natural-blend/**
+!exports/style-previews/extensions/extensions-volume-set/**
+!exports/style-previews/extensions/extensions-length-set/**
+!exports/style-previews/extensions/extensions-soft-waves/**
+
+# Exclude everything inside curated presets again
+exports/style-previews/extensions/extensions-natural-blend/**
+exports/style-previews/extensions/extensions-volume-set/**
+exports/style-previews/extensions/extensions-length-set/**
+exports/style-previews/extensions/extensions-soft-waves/**
+
+# Re-include only curated colors (7) for each preset
+!exports/style-previews/extensions/extensions-natural-blend/old-money/**
+!exports/style-previews/extensions/extensions-natural-blend/champagne/**
+!exports/style-previews/extensions/extensions-natural-blend/espresso/**
+!exports/style-previews/extensions/extensions-natural-blend/copper-glow/**
+!exports/style-previews/extensions/extensions-natural-blend/platinum-icy/**
+!exports/style-previews/extensions/extensions-natural-blend/ash/**
+!exports/style-previews/extensions/extensions-natural-blend/silver-ash/**
+
+!exports/style-previews/extensions/extensions-volume-set/old-money/**
+!exports/style-previews/extensions/extensions-volume-set/champagne/**
+!exports/style-previews/extensions/extensions-volume-set/espresso/**
+!exports/style-previews/extensions/extensions-volume-set/copper-glow/**
+!exports/style-previews/extensions/extensions-volume-set/platinum-icy/**
+!exports/style-previews/extensions/extensions-volume-set/ash/**
+!exports/style-previews/extensions/extensions-volume-set/silver-ash/**
+
+!exports/style-previews/extensions/extensions-length-set/old-money/**
+!exports/style-previews/extensions/extensions-length-set/champagne/**
+!exports/style-previews/extensions/extensions-length-set/espresso/**
+!exports/style-previews/extensions/extensions-length-set/copper-glow/**
+!exports/style-previews/extensions/extensions-length-set/platinum-icy/**
+!exports/style-previews/extensions/extensions-length-set/ash/**
+!exports/style-previews/extensions/extensions-length-set/silver-ash/**
+
+!exports/style-previews/extensions/extensions-soft-waves/old-money/**
+!exports/style-previews/extensions/extensions-soft-waves/champagne/**
+!exports/style-previews/extensions/extensions-soft-waves/espresso/**
+!exports/style-previews/extensions/extensions-soft-waves/copper-glow/**
+!exports/style-previews/extensions/extensions-soft-waves/platinum-icy/**
+!exports/style-previews/extensions/extensions-soft-waves/ash/**
+!exports/style-previews/extensions/extensions-soft-waves/silver-ash/**
