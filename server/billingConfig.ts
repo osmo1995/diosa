@@ -20,7 +20,7 @@ export function getBillingConfig() {
   const pro = process.env.STRIPE_PRICE_PRO?.trim();
   const studio = process.env.STRIPE_PRICE_STUDIO?.trim();
 
-  return {
+  const cfg = {
     packs: [
       pack25
         ? ({
@@ -66,5 +66,18 @@ export function getBillingConfig() {
           } satisfies SubscriptionTierConfig)
         : null,
     ].filter(Boolean) as SubscriptionTierConfig[],
+  };
+
+  return {
+    ...cfg,
+    debug: {
+      pack25Configured: Boolean(pack25),
+      pack55Configured: Boolean(pack55),
+      starterConfigured: Boolean(starter),
+      proConfigured: Boolean(pro),
+      studioConfigured: Boolean(studio),
+      packsCount: cfg.packs.length,
+      tiersCount: cfg.tiers.length,
+    },
   };
 }
