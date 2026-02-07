@@ -5,5 +5,5 @@ if (process.env.FETCH_PEXELS_HERO === 'true') {
   await import('./fetchPexelsHeroVideo.mjs');
 }
 
-import './copyExportsToPublic.mjs';
 import './generateHeroWebm.mjs';
+import './copyExportsToPublic.mjs';

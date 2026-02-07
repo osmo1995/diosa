@@ -2,8 +2,8 @@ import { existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 
-const MP4 = path.resolve('public/exports/hero/hero-install.mp4');
-const WEBM = path.resolve('public/exports/hero/hero-install.webm');
+const MP4 = path.resolve('exports/hero/hero-install.mp4');
+const WEBM = path.resolve('exports/hero/hero-install.webm');
 
 function log(msg) {
   console.log(`[hero-webm] ${msg}`);
@@ -11,7 +11,7 @@ function log(msg) {
 
 // Nothing to do if there's no MP4 or WebM already exists.
 if (!existsSync(MP4)) {
-  log('No MP4 found at public/exports/hero/hero-install.mp4; skipping WebM generation.');
+  log('No MP4 found at exports/hero/hero-install.mp4; skipping WebM generation.');
   process.exit(0);
 }
 
