@@ -17,6 +17,10 @@ public/exports
 # Generated AVIF variants (created at build/deploy time)
 exports/**/*.avif
 
+# Downloaded hero background video (kept out of git)
+exports/hero/hero-install.mp4
+exports/hero/hero-install.webm
+
 *.local
 
 # Editor directories and files
