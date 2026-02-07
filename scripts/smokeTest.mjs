@@ -64,10 +64,17 @@ async function main() {
       if (!resp.ok) throw new Error(`Route ${r} failed: ${resp.status}`);
     }
 
-    const assets = ['/exports/hero/700.webp', '/exports/cta/700.webp', '/exports/services/tape-in/700.webp'];
-    for (const a of assets) {
+    const requiredAssets = ['/exports/hero/700.webp', '/exports/cta/700.webp', '/exports/services/tape-in/700.webp'];
+    for (const a of requiredAssets) {
       const resp = await fetch(`http://localhost:${PREVIEW_PORT}${a}`, { method: 'HEAD' });
       if (!resp.ok) throw new Error(`Asset ${a} failed: ${resp.status}`);
+    }
+
+    // Optional (until the file is added): hero background video.
+    const optionalAssets = ['/exports/hero/hero-install.webm', '/exports/hero/hero-install.mp4'];
+    for (const a of optionalAssets) {
+      const resp = await fetch(`http://localhost:${PREVIEW_PORT}${a}`, { method: 'HEAD' });
+      if (!resp.ok) console.warn(`[smoke] Optional asset missing: ${a} (${resp.status})`);
     }
 
     console.log('[smoke] OK');

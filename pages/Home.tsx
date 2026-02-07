@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { OptimizedImage } from '../components/ui/OptimizedImage';
+import { HeroBackgroundVideo } from '../components/ui/HeroBackgroundVideo';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { services, transformations, testimonials } from '../data/salonContent';
 import { Link } from 'react-router-dom';
@@ -47,6 +48,7 @@ export const Home: React.FC = () => {
       {/* 1. Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
+          {/* Image-first for fast LCP, then progressively enhance with video. */}
           <OptimizedImage 
             basePath="/exports/hero"
             preferAvif
@@ -57,6 +59,13 @@ export const Home: React.FC = () => {
             fetchPriority="high"
             sizesAttr="100vw"
           />
+
+          <HeroBackgroundVideo
+            videoSrc="/exports/hero/hero-install.mp4"
+            poster="/exports/hero/700.webp"
+            className="absolute inset-0 w-full h-full object-cover opacity-0 animate-fade-in"
+          />
+
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
