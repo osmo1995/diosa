@@ -144,7 +144,7 @@ export const StyleGenerator: React.FC = () => {
     } catch (e: any) {
       console.error('[StyleGenerator] Generation error:', e);
       if (e?.message === 'quota_exhausted') {
-        setPaywall({ open: true, message: 'You've used your 15 free generations this month.' });
+        setPaywall({ open: true, message: "You've used your 15 free generations this month." });
         setError(null);
       } else if (e?.message === 'auth_required') {
         setError('Please sign in to generate previews. Click Virtual Preview in the menu to access your account.');
