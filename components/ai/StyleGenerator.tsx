@@ -138,16 +138,22 @@ export const StyleGenerator: React.FC = () => {
       } catch {}
 
       if (!output) {
-        setError('We could not generate a preview right now. Please try again in a moment.');
+        console.error('[StyleGenerator] Generation returned null - check console for API errors');
+        setError('Generation failed. Please check that you are signed in and try again.');
       }
     } catch (e: any) {
+      console.error('[StyleGenerator] Generation error:', e);
       if (e?.message === 'quota_exhausted') {
-        setPaywall({ open: true, message: 'You’ve used your 15 free generations this month.' });
+        setPaywall({ open: true, message: 'You've used your 15 free generations this month.' });
         setError(null);
       } else if (e?.message === 'auth_required') {
-        setError('Please sign in to generate previews.');
+        setError('Please sign in to generate previews. Click Virtual Preview in the menu to access your account.');
+      } else if (e?.message?.includes('style_api_')) {
+        const statusCode = e.message.split('_').pop();
+        setError('Generation failed (Error ' + statusCode + '). Please check browser console for details.');
       } else {
-        setError('Failed to generate preview');
+        const errMsg = e?.message ? ': ' + e.message : '';
+        setError('Failed to generate preview' + errMsg + '. Check browser console for details.');
       }
     } finally {
       setIsGenerating(false);

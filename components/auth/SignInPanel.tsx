@@ -1,13 +1,24 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabaseClient } from '../../services/supabaseClient';
+import { useAuth } from '../../services/auth';
 import { Button } from '../ui/Button';
 
 export const SignInPanel: React.FC = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
 
   const supabaseReady = useMemo(() => Boolean(supabaseClient), []);
+
+  // If user is already authenticated, redirect to style generator immediately
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate('/style-generator', { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   async function signInWithGoogle() {
     if (!supabaseClient) return;
