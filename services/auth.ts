@@ -22,11 +22,13 @@ export function useAuth() {
 
       const { data } = await supabaseClient.auth.getSession();
       if (!mounted) return;
+      console.log('[useAuth] Session retrieved:', data.session ? 'User signed in' : 'No session');
       setSession(data.session);
       setUser(data.session?.user ?? null);
       setLoading(false);
 
-      const { data: sub } = supabaseClient.auth.onAuthStateChange((_event, next) => {
+      const { data: sub } = supabaseClient.auth.onAuthStateChange((event, next) => {
+        console.log('[useAuth] Auth state changed:', event, next ? 'User signed in' : 'No session');
         setSession(next);
         setUser(next?.user ?? null);
       });
