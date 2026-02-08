@@ -14,7 +14,8 @@ export const SignInPanel: React.FC = () => {
     setLoading(true);
     setStatus(null);
     try {
-      const redirectTo = `${window.location.origin}/#/style-generator`;
+      // Supabase redirects to the root, then we handle the hash routing client-side
+      const redirectTo = `${window.location.origin}/`;
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -33,7 +34,8 @@ export const SignInPanel: React.FC = () => {
     setLoading(true);
     setStatus(null);
     try {
-      const emailRedirectTo = `${window.location.origin}/#/style-generator`;
+      // Supabase redirects to the root, then we handle the hash routing client-side
+      const emailRedirectTo = `${window.location.origin}/`;
       const { error } = await supabaseClient.auth.signInWithOtp({
         email,
         options: {
