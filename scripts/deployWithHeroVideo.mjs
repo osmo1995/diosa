@@ -20,6 +20,44 @@ import path from 'node:path';
 
 const MP4_PATH = path.resolve('exports/hero/hero-install.mp4');
 
+// Load .env.local if it exists (ESM doesn't auto-load dotenv)
+const envLocalPath = path.resolve('.env.local');
+if (fs.existsSync(envLocalPath)) {
+  const envContent = fs.readFileSync(envLocalPath, 'utf-8');
+  let currentKey = null;
+  let currentValue = '';
+  
+  const lines = envContent.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    
+    if (!trimmed || trimmed.startsWith('#')) {
+      if (currentKey) {
+        process.env[currentKey] = currentValue.trim();
+        currentKey = null;
+        currentValue = '';
+      }
+      continue;
+    }
+    
+    const eqIndex = line.indexOf('=');
+    if (eqIndex > 0 && !line.startsWith(' ') && !line.startsWith('\t')) {
+      if (currentKey) {
+        process.env[currentKey] = currentValue.trim();
+      }
+      currentKey = line.substring(0, eqIndex).trim();
+      currentValue = line.substring(eqIndex + 1);
+    } else if (currentKey) {
+      currentValue += '\n' + line;
+    }
+  }
+  
+  if (currentKey) {
+    process.env[currentKey] = currentValue.trim();
+  }
+}
+
 function log(msg) {
   console.log(`\n[deploy-hero] ${msg}\n`);
 }

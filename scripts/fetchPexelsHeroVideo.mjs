@@ -4,6 +4,50 @@ import path from 'node:path';
 const OUT_DIR = path.resolve('exports/hero');
 const OUT_FILE = path.join(OUT_DIR, 'hero-install.mp4');
 
+// Load .env.local if it exists (ESM doesn't auto-load dotenv)
+const envLocalPath = path.resolve('.env.local');
+if (fs.existsSync(envLocalPath)) {
+  const envContent = fs.readFileSync(envLocalPath, 'utf-8');
+  let currentKey = null;
+  let currentValue = '';
+  
+  const lines = envContent.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    
+    // Skip empty lines and comments
+    if (!trimmed || trimmed.startsWith('#')) {
+      if (currentKey) {
+        process.env[currentKey] = currentValue.trim();
+        currentKey = null;
+        currentValue = '';
+      }
+      continue;
+    }
+    
+    // Check if this is a new key=value line
+    const eqIndex = line.indexOf('=');
+    if (eqIndex > 0 && !line.startsWith(' ') && !line.startsWith('\t')) {
+      // Save previous key if exists
+      if (currentKey) {
+        process.env[currentKey] = currentValue.trim();
+      }
+      
+      currentKey = line.substring(0, eqIndex).trim();
+      currentValue = line.substring(eqIndex + 1);
+    } else if (currentKey) {
+      // Continuation of previous value
+      currentValue += '\n' + line;
+    }
+  }
+  
+  // Save last key
+  if (currentKey) {
+    process.env[currentKey] = currentValue.trim();
+  }
+}
+
 function log(msg) {
   console.log(`[pexels-hero] ${msg}`);
 }
