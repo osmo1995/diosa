@@ -63,6 +63,10 @@ export const generateStylePreview = async (
     return null;
   } catch (e) {
     console.error('Style API error', e);
+    // Re-throw specific errors so the UI can handle them
+    if (e instanceof Error && (e.message === 'auth_required' || e.message === 'quota_exhausted' || e.message.startsWith('style_api_'))) {
+      throw e;
+    }
     return null;
   } finally {
     window.clearTimeout(timeout);
