@@ -9,6 +9,8 @@ const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading, supabaseReady } = useAuth();
 
   if (!supabaseReady) return <SignInPanel />;
+  
+  // Show loading skeleton while checking auth (prevents sign-in panel flicker after OAuth redirect)
   if (loading) {
     return (
       <div className="bg-white border border-gray-100 shadow-lg rounded-2xl p-8">
