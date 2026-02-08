@@ -96,6 +96,7 @@ async function main() {
 
   const bytes = await downloadTo(pickedFile.link, OUT_FILE);
   log(`Saved ${Math.round(bytes / 1024 / 1024)}MB to ${path.relative(process.cwd(), OUT_FILE)}`);
+  log(`Absolute path: ${OUT_FILE}`);
 
   log('Next: run `npm run build` (prebuild will copy exports -> public/exports).');
   log('Optional: set FETCH_PEXELS_HERO=true during build to refresh automatically.');

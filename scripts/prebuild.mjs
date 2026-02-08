@@ -1,4 +1,6 @@
 import './generateSeoFiles.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function isTruthyEnv(v) {
   const s = String(v ?? '').trim().toLowerCase();
@@ -14,6 +16,8 @@ const hasPexelsKey = String(process.env.PEXELS_API_KEY ?? '').trim().length > 0;
 // - Otherwise, if a PEXELS_API_KEY is present => fetch is best-effort (warn on errors)
 const shouldFetchPexelsHero = explicitFetchRequested || (!String(fetchFlag ?? '').trim() && hasPexelsKey);
 
+const expectedMp4 = path.resolve('exports/hero/hero-install.mp4');
+
 if (shouldFetchPexelsHero) {
   console.log(`[prebuild] Pexels hero fetch: ${explicitFetchRequested ? 'required' : 'best-effort'}`);
   try {
@@ -21,6 +25,13 @@ if (shouldFetchPexelsHero) {
   } catch (e) {
     if (explicitFetchRequested) throw e;
     console.warn('[prebuild] Pexels hero fetch failed (continuing without video):', e?.message ?? e);
+  }
+
+  // Ensure we don't silently ship a build that references a missing video.
+  if (!fs.existsSync(expectedMp4)) {
+    const msg = `[prebuild] Expected hero MP4 missing after fetch: ${expectedMp4}`;
+    if (explicitFetchRequested) throw new Error(msg);
+    console.warn(msg);
   }
 } else {
   console.log('[prebuild] Pexels hero fetch: skipped');
