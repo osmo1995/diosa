@@ -6,11 +6,28 @@ import { OptimizedImage } from '../components/ui/OptimizedImage';
 import { HeroBackgroundVideo } from '../components/ui/HeroBackgroundVideo';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { services, transformations, testimonials } from '../data/salonContent';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../services/auth';
 
 export const Home: React.FC = () => {
   const [activeTransform, setActiveTransform] = useState(0);
   const [deferStage, setDeferStage] = useState<0 | 1 | 2 | 3>(0);
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+  // Detect OAuth callback and redirect to style generator if user just authenticated
+  useEffect(() => {
+    // Check if URL contains Supabase OAuth callback parameters
+    const hash = window.location.hash;
+    if (hash.includes('access_token') && hash.includes('type=')) {
+      // User just completed OAuth - redirect to style generator after session is established
+      if (!loading && user) {
+        setTimeout(() => {
+          navigate('/style-generator');
+        }, 500);
+      }
+    }
+  }, [user, loading, navigate]);
 
   useEffect(() => {
     // Stage below-the-fold work to reduce initial main-thread work.
