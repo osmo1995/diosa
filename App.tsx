@@ -36,6 +36,7 @@ import { ScrollToTop } from './components/ui/ScrollToTop';
 
 import { Home } from './pages/Home';
 import { NotFound } from './pages/NotFound';
+import { AuthCallback } from './pages/AuthCallback';
 
 const Gallery = React.lazy(() => import('./pages/Gallery').then((m) => ({ default: m.Gallery })));
 const Contact = React.lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
@@ -97,6 +98,7 @@ const App: React.FC = () => {
                 <Route path="/booking" element={<Contact />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/style-generator" element={<StyleGeneratorPage />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
