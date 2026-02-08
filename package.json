@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "deploy:with-video": "node scripts/deployWithHeroVideo.mjs",
     "dev": "npx vite",
     "prebuild": "node scripts/prebuild.mjs",
     "build": "npx vite build",
