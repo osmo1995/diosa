@@ -16,17 +16,25 @@
     <meta name="theme-color" content="#2B2B2B" />
 
     <!-- Google Analytics (GA4) -->
-    <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
-    <!-- Get your ID: https://analytics.google.com/analytics/web/ → Admin → Data Streams → Web → Measurement ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_MEASUREMENT_ID%"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '%VITE_GA_MEASUREMENT_ID%', {
-        send_page_view: true,
-        cookie_flags: 'SameSite=None;Secure'
-      });
+      // Inline GA4 tracking code (Vite env vars not available in index.html)
+      (function() {
+        var gaId = 'G-GG809CC2T6'; // Your actual Measurement ID
+        if (gaId && gaId !== 'undefined') {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+          document.head.appendChild(script);
+
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId, {
+            send_page_view: true,
+            cookie_flags: 'SameSite=None;Secure'
+          });
+        }
+      })();
     </script>
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -68,8 +76,8 @@
         "@context": "https://schema.org",
         "@type": "BeautySalon",
         "name": "Diosa Studio Yorkville",
-        "url": "%VITE_SITE_URL%",
-        "image": "%VITE_SITE_URL%/exports/hero/1000.webp",
+        "url": "https://diosa.vercel.app",
+        "image": "https://diosa.vercel.app/exports/hero/1000.webp",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "2 Bloor St E",
