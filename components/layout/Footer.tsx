@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Mail, MapPin, Phone } from 'lucide-react';
+import { Icon } from '@iconify/react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -18,23 +19,58 @@ export const Footer: React.FC = () => {
             Experience the "Goddess" transformation in the heart of Yorkville.
           </p>
           <div className="flex space-x-4">
-            <button
-              type="button"
-              aria-label="Instagram (coming soon)"
-              className="hover:text-divine-gold transition-colors"
-              onClick={() => alert('Instagram coming soon')}
+            <a
+              href="https://instagram.com/diosa.studio.yorkville"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Instagram"
+              className="hover:scale-110 transition-transform"
             >
-              <Instagram size={20} />
-            </button>
-            <button
-              type="button"
-              aria-label="Facebook (coming soon)"
-              className="hover:text-divine-gold transition-colors"
-              onClick={() => alert('Facebook coming soon')}
+              <Icon icon="skill-icons:instagram" width="24" height="24" />
+            </a>
+            <a
+              href="https://facebook.com/DiosamStudioYorkville"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Facebook"
+              className="hover:scale-110 transition-transform"
             >
-              <Facebook size={20} />
-            </button>
-            <a href="mailto:info@diosa-studio.com" aria-label="Email Diosa Studio" className="hover:text-divine-gold transition-colors"><Mail size={20} /></a>
+              <Icon icon="logos:facebook" width="24" height="24" />
+            </a>
+            <a
+              href="https://tiktok.com/@diosa.studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on TikTok"
+              className="hover:scale-110 transition-transform"
+            >
+              <Icon icon="logos:tiktok-icon" width="24" height="24" />
+            </a>
+            <a
+              href="https://pinterest.com/diosa_studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Pinterest"
+              className="hover:scale-110 transition-transform"
+            >
+              <Icon icon="skill-icons:pinterest" width="24" height="24" />
+            </a>
+            <a
+              href="https://youtube.com/@DiosaStudioYorkville"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Subscribe on YouTube"
+              className="hover:scale-110 transition-transform"
+            >
+              <Icon icon="skill-icons:youtube" width="24" height="24" />
+            </a>
+            <a
+              href="mailto:info@diosa-studio.com"
+              aria-label="Email Diosa Studio"
+              className="hover:scale-110 transition-transform"
+            >
+              <Mail size={24} className="text-divine-gold" />
+            </a>
           </div>
         </div>
 
