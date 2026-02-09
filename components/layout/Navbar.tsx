@@ -19,6 +19,7 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Navigation links - updated to Members for authentication
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Services', path: '/services' },
