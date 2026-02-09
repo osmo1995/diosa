@@ -35,7 +35,7 @@ export function MembersPage() {
   return (
     <div className="min-h-screen bg-goddess-white">
       {/* Header */}
-      <div className="bg-deep-charcoal text-white py-16">
+      <div className="bg-deep-charcoal text-white py-16 pt-24 md:pt-28">
         <div className="container mx-auto px-6 text-center">
           <p className="font-accent text-3xl text-divine-gold mb-2">Members Area</p>
           <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-widest mb-4">

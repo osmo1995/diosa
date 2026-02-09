@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
             >
               <Facebook size={20} />
             </button>
-            <a href="mailto:hello@diosayorkville.com" aria-label="Email Diosa Studio" className="hover:text-divine-gold transition-colors"><Mail size={20} /></a>
+            <a href="mailto:info@diosa-studio.com" aria-label="Email Diosa Studio" className="hover:text-divine-gold transition-colors"><Mail size={20} /></a>
           </div>
         </div>
 
@@ -67,15 +67,15 @@ export const Footer: React.FC = () => {
           <ul className="space-y-4 text-sm text-soft-champagne/80">
             <li className="flex items-start space-x-3">
               <MapPin size={18} className="text-divine-gold flex-shrink-0" />
-              <span>123 Luxury Ave, Yorkville<br />Toronto, ON M5R 1A1</span>
+              <span>2 Bloor St E<br />Toronto, ON M4W 1A8</span>
             </li>
             <li className="flex items-center space-x-3">
               <Phone size={18} className="text-divine-gold flex-shrink-0" />
-              <span>(416) 555-0199</span>
+              <span>437-929-2563</span>
             </li>
             <li className="flex items-center space-x-3">
               <Mail size={18} className="text-divine-gold flex-shrink-0" />
-              <span>hello@diosayorkville.com</span>
+              <span>info@diosa-studio.com</span>
             </li>
           </ul>
         </div>
