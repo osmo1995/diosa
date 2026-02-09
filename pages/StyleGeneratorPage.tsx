@@ -1,40 +1,39 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { StyleGenerator } from '../components/ai/StyleGenerator';
-import { SignInPanel } from '../components/auth/SignInPanel';
 import { useAuth } from '../services/auth';
 
-const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading, supabaseReady } = useAuth();
+export const StyleGeneratorPage: React.FC = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
-  if (!supabaseReady) return <SignInPanel />;
-  
-  // Show loading skeleton while checking auth (prevents sign-in panel flicker after OAuth redirect)
+  React.useEffect(() => {
+    // Redirect unauthenticated users to Members page
+    if (!loading && !user) {
+      navigate('/members', { replace: true });
+    }
+  }, [loading, user, navigate]);
+
+  // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="bg-white border border-gray-100 shadow-lg rounded-2xl p-8">
-        <div className="h-6 w-40 bg-gray-200 animate-pulse mb-3" />
-        <div className="h-4 w-full max-w-md bg-gray-200 animate-pulse" />
+      <div className="pt-40 pb-24 bg-goddess-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="h-8 w-64 bg-gray-200 animate-pulse mb-6" />
+          <div className="h-4 w-full max-w-xl bg-gray-200 animate-pulse" />
+        </div>
       </div>
     );
   }
 
-  if (!user) return <SignInPanel />;
+  // If not authenticated, return null (useEffect will redirect to /members)
+  if (!user) {
+    return null;
+  }
 
-  return <>{children}</>;
-};
-
-export const StyleGeneratorPage: React.FC = () => {
-  const { user, loading } = useAuth();
-
-  React.useEffect(() => {
-    // Safety net: if auth callback lands elsewhere, send authenticated users here.
-    if (!loading && user && window.location.hash !== '#/style-generator') {
-      window.location.hash = '/style-generator';
-    }
-  }, [loading, user]);
-
+  // User is authenticated, show the style generator
   return (
     <div className="pt-40 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -48,9 +47,7 @@ export const StyleGeneratorPage: React.FC = () => {
         </AnimatedSection>
 
         <AnimatedSection delay={0.2}>
-          <AuthGate>
-            <StyleGenerator />
-          </AuthGate>
+          <StyleGenerator />
         </AnimatedSection>
       </div>
     </div>

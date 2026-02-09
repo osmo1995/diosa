@@ -53,3 +53,9 @@ supabase/.temp/
 .env*.local
 .env
 .env.*
+
+# Sensitive OAuth configuration files (contain API keys and secrets)
+OAUTH_CONFIGURATION_GUIDE.md
+CONFIGURATION_CHECKLIST.md
+*OAUTH*.md
+*CONFIGURATION*.md

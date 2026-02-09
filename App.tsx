@@ -45,6 +45,7 @@ const StyleGeneratorPage = React.lazy(() =>
 );
 const Services = React.lazy(() => import('./pages/Services').then((m) => ({ default: m.Services })));
 const About = React.lazy(() => import('./pages/About').then((m) => ({ default: m.About })));
+const MembersPage = React.lazy(() => import('./pages/MembersPage').then((m) => ({ default: m.MembersPage })));
 
 
 const ConciergeWidget = React.lazy(() =>
@@ -97,6 +98,7 @@ const App: React.FC = () => {
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/booking" element={<Contact />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/members" element={<MembersPage />} />
                 <Route path="/style-generator" element={<StyleGeneratorPage />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="*" element={<NotFound />} />

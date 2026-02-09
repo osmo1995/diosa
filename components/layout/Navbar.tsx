@@ -24,7 +24,7 @@ export const Navbar: React.FC = () => {
     { name: 'Services', path: '/services' },
     { name: 'Gallery', path: '/gallery' },
     { name: 'About', path: '/about' },
-    { name: 'Virtual Preview', path: '/style-generator' },
+    { name: 'Members', path: '/members' },
   ];
 
   const navbarClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 py-4 md:px-12 ${

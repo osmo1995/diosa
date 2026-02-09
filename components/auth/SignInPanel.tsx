@@ -25,8 +25,8 @@ export const SignInPanel: React.FC = () => {
     setLoading(true);
     setStatus(null);
     try {
-      // Redirect back to style generator after OAuth
-      const redirectTo = `${window.location.origin}/#/style-generator`;
+      // Redirect to members page after OAuth (members page will redirect to style-generator if authenticated)
+      const redirectTo = `${window.location.origin}/#/members`;
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -45,8 +45,8 @@ export const SignInPanel: React.FC = () => {
     setLoading(true);
     setStatus(null);
     try {
-      // Redirect back to style generator after magic link sign-in
-      const emailRedirectTo = `${window.location.origin}/#/style-generator`;
+      // Redirect to members page after magic link sign-in
+      const emailRedirectTo = `${window.location.origin}/#/members`;
       const { error } = await supabaseClient.auth.signInWithOtp({
         email,
         options: {
