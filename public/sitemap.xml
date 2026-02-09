@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://diosa.vercel.app/</loc></url>
-  <url><loc>https://diosa.vercel.app/#/services</loc></url>
-  <url><loc>https://diosa.vercel.app/#/gallery</loc></url>
-  <url><loc>https://diosa.vercel.app/#/about</loc></url>
-  <url><loc>https://diosa.vercel.app/#/booking</loc></url>
-  <url><loc>https://diosa.vercel.app/#/style-generator</loc></url>
+  <url><loc>https://diosa.vercel.app/</loc><priority>1.0</priority></url>
+  <url><loc>https://diosa.vercel.app/services</loc><priority>0.9</priority></url>
+  <url><loc>https://diosa.vercel.app/gallery</loc><priority>0.8</priority></url>
+  <url><loc>https://diosa.vercel.app/about</loc><priority>0.7</priority></url>
+  <url><loc>https://diosa.vercel.app/booking</loc><priority>0.9</priority></url>
+  <url><loc>https://diosa.vercel.app/members</loc><priority>0.6</priority></url>
+  <url><loc>https://diosa.vercel.app/style-generator</loc><priority>0.8</priority></url>
 </urlset>
