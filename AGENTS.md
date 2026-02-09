@@ -1,8 +1,8 @@
 # AGENTS.md - Diosa Studio Project Guide
 
-**Last Updated:** January 27, 2026  
+**Last Updated:** February 9, 2026  
 **Project:** Diosa Studio Yorkville - Premium Hair Extensions Website  
-**Production URL:** https://diosa-yorkville.vercel.app  
+**Production URL:** https://diosa.vercel.app  
 **Repository:** Connected to Vercel auto-deploy on `main` branch
 
 ## ✅ Current Baseline (Read This First)
@@ -43,7 +43,7 @@ A luxury hair extension salon in Yorkville, Toronto. This is their website featu
 ### **Frontend**
 - **React 18** with TypeScript
 - **Vite** (build tool)
-- **React Router** (HashRouter for client-side routing)
+- **React Router** (BrowserRouter for client-side routing)
 - **Tailwind CSS v4** (local PostCSS build, NOT CDN)
 - **Framer Motion** (animations)
 - **Three.js** (optional 3D accents, lazy-loaded)
@@ -749,6 +749,79 @@ const loadConcierge = useNearViewport(800);
 - ✅ Added touch targets + iOS-safe form inputs
 - ❌ Attempted BeforeAfterSlider (failed - reverted)
 - ✅ Restored to working baseline (commit 7455fd7)
+
+### **February 9, 2026 - Production Hardening & BrowserRouter Migration**
+
+**Router Migration (HashRouter → BrowserRouter)**
+- Migrated from `HashRouter` to `BrowserRouter` for proper SPA routing on Vercel
+- Updated all navigation to use `useNavigate()` / `<Link>` instead of manual `window.location.hash` mutations
+- Updated OAuth callback URLs to use real paths (`/auth/callback`) instead of hash fragments (`/#/members`)
+- Updated Stripe checkout success/cancel URLs to match BrowserRouter paths
+- Smoke test routes updated to non-hash paths: `/`, `/services`, `/members`, `/auth/callback`, etc.
+
+**Supabase Production Configuration (CRITICAL)**
+- **Issue found:** Production had mismatched Supabase projects (client: `jqvvlwddpshhjrstouug`, server: `shfelqjgxwyjhwiekvhg`)
+- **Resolution:** Aligned all env vars to use `jqvvlwddpshhjrstouug` for both client and server
+- **Verification:** Decoded service role JWT to confirm `ref: "jqvvlwddpshhjrstouug"`
+- **Production env vars updated:**
+  - `SUPABASE_URL` → `https://jqvvlwddpshhjrstouug.supabase.co`
+  - `SUPABASE_SERVICE_ROLE_KEY` → (service role key for jqvvl project)
+  - `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` (already correct)
+
+**Stripe Credit Pack Configuration**
+- **Issue found:** Production `STRIPE_PRICE_PACK_25` and `STRIPE_PRICE_PACK_55` pointed to invalid price IDs (different Stripe account/mode)
+- **Resolution:** Created new one-time USD prices in the correct Stripe account:
+  - Product: `prod_TwdTKfKsiO9OrE` ("Virtual Preview Stylist – Credit Packs")
+  - Pack 25: `price_1SykCkLsOS21UtltPhRMKdUx` ($5.00 USD)
+  - Pack 55: `price_1SykClLsOS21Utltao3RQv8k` ($10.00 USD)
+- **Production env vars updated:**
+  - `STRIPE_PRICE_PACK_25` → `price_1SykCkLsOS21UtltPhRMKdUx`
+  - `STRIPE_PRICE_PACK_55` → `price_1SykClLsOS21Utltao3RQv8k`
+  - `STRIPE_CREDITS_MAP_JSON` → `{"price_1SykCk...":25,"price_1SykCl...":55}`
+- **Verified:** `/api/billing/config` returns correct pack and tier prices
+
+**Contact Information Updated**
+- Phone: `437-929-2563`
+- Address: `2 Bloor St E, Toronto, ON M4W 1A8`
+- Email: `info@diosa-studio.com` (updated footer mailto link)
+
+**Members Page Layout Fix**
+- Fixed "Members Area" heading being hidden behind fixed navbar
+- Added `pt-24 md:pt-28` to header section so heading is fully visible on mobile and desktop
+
+**Vercel Deployment Notes**
+- **15k file limit workaround:** Repo contains >16k files (mostly under `exports/`), causing CLI deploy to fail
+- **Solution:** Use `vercel build --prod` → `vercel deploy --prebuilt --prod` workflow
+- **Alternative:** Use `--archive=tgz` flag (not always reliable)
+- **Avoid:** `--prebuilt` without running `vercel build` first (will deploy stale output)
+
+**Production End-to-End Testing (Authenticated AI Style Generator)**
+- Created test user via Supabase Admin API (service role)
+- Signed in via anon key to obtain real JWT
+- Verified authenticated endpoints:
+  - `GET /api/usage` → 200 OK (returned user quota: 15 free, 0 used)
+  - `POST /api/style` → 200 OK (auth passed, generation processed)
+- **Test user preserved for future testing:** `rovodev.tester+1770609644680@example.com` (stored in Supabase, credentials NOT committed to git)
+
+**Production Deployment Info**
+- Latest deployment: `https://diosa-ed49x83mt-anas-projects-37a977a8.vercel.app` (aliased to `diosa.vercel.app`)
+- Vercel auto-deploy: Push to `main` triggers new build
+- Manual deploy: `vercel build --prod && vercel deploy --prebuilt --prod --scope anas-projects-37a977a8`
+
+**Ignore Files & Security**
+- Updated `.vercelignore` to exclude:
+  - `.env*` (all local env files)
+  - `OAUTH_CONFIGURATION_GUIDE.md`
+  - `CONFIGURATION_CHECKLIST.md`
+- Verified `.gitignore` already excludes sensitive files
+- No secrets committed to git (verified via `git ls-files`)
+
+**Key Production URLs**
+- Homepage: `https://diosa.vercel.app/`
+- Members/Sign-In: `https://diosa.vercel.app/members`
+- OAuth Callback: `https://diosa.vercel.app/auth/callback`
+- Style Generator: `https://diosa.vercel.app/style-generator`
+- Billing Config: `https://diosa.vercel.app/api/billing/config`
 
 ---
 
