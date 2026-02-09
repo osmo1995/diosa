@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 
 export const NotFound: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="pt-32 pb-24 bg-goddess-white">
       <div className="max-w-5xl mx-auto px-6">
@@ -13,9 +15,9 @@ export const NotFound: React.FC = () => {
             This page doesn’t exist — but your next best hair day absolutely does.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={() => (window.location.hash = '/')}>Return Home</Button>
-            <Button size="lg" variant="outline" onClick={() => (window.location.hash = '/booking')}>Book Consultation</Button>
-            <Button size="lg" variant="secondary" onClick={() => (window.location.hash = '/services')}>Explore Methods</Button>
+            <Button size="lg" onClick={() => navigate('/')}>Return Home</Button>
+            <Button size="lg" variant="outline" onClick={() => navigate('/booking')}>Book Consultation</Button>
+            <Button size="lg" variant="secondary" onClick={() => navigate('/services')}>Explore Methods</Button>
           </div>
         </AnimatedSection>
       </div>

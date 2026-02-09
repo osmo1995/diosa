@@ -13,21 +13,10 @@ export const Home: React.FC = () => {
   const [activeTransform, setActiveTransform] = useState(0);
   const [deferStage, setDeferStage] = useState<0 | 1 | 2 | 3>(0);
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
-  // Detect OAuth callback and redirect to style generator if user just authenticated
-  useEffect(() => {
-    // Check if URL contains Supabase OAuth callback parameters
-    const hash = window.location.hash;
-    if (hash.includes('access_token') && hash.includes('type=')) {
-      // User just completed OAuth - redirect to style generator after session is established
-      if (!loading && user) {
-        setTimeout(() => {
-          navigate('/style-generator');
-        }, 500);
-      }
-    }
-  }, [user, loading, navigate]);
+  // BrowserRouter: OAuth callbacks land on /auth/callback and then navigate into the app.
+  // No Home-level hash parsing needed.
 
   useEffect(() => {
     // Stage below-the-fold work to reduce initial main-thread work.
@@ -96,10 +85,10 @@ export const Home: React.FC = () => {
               Experience Yorkville's premier destination for high-end hair extensions and bespoke transformations.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-              <Button size="lg" onClick={() => window.location.hash = '/booking'}>
+              <Button size="lg" onClick={() => navigate('/booking')}>
                 Book Consultation
               </Button>
-              <Button size="lg" variant="outline" onClick={() => window.location.hash = '/style-generator'}>
+              <Button size="lg" variant="outline" onClick={() => navigate('/style-generator')}>
                 Virtual Preview
               </Button>
             </div>

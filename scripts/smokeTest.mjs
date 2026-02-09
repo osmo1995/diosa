@@ -58,7 +58,7 @@ async function main() {
   try {
     await waitFor(`http://localhost:${PREVIEW_PORT}/`);
 
-    const routes = ['/', '/#/services', '/#/gallery', '/#/about', '/#/booking', '/#/style-generator'];
+    const routes = ['/', '/services', '/gallery', '/about', '/booking', '/members', '/style-generator', '/auth/callback'];
     for (const r of routes) {
       const resp = await fetch(`http://localhost:${PREVIEW_PORT}${r}`);
       if (!resp.ok) throw new Error(`Route ${r} failed: ${resp.status}`);

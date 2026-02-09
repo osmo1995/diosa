@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabaseClient } from '../services/supabaseClient';
 
 export const AuthCallback: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const nextPath = useMemo(() => {
+    const next = searchParams.get('next') || '/style-generator';
+    // Basic safety: only allow in-app relative paths.
+    return next.startsWith('/') ? next : '/style-generator';
+  }, [searchParams]);
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -10,9 +19,9 @@ export const AuthCallback: React.FC = () => {
       if (!supabaseClient) {
         setStatus('error');
         setErrorMessage('Supabase client not configured');
-        // Redirect to home after 2 seconds
+        // Redirect to Members after 2 seconds
         setTimeout(() => {
-          window.location.hash = '/';
+          navigate('/members', { replace: true });
         }, 2000);
         return;
       }
@@ -26,18 +35,18 @@ export const AuthCallback: React.FC = () => {
           console.error('Auth callback error:', error);
           setStatus('error');
           setErrorMessage(error.message);
-          // Redirect back to sign-in after 3 seconds
+          // Redirect back to Members after 3 seconds
           setTimeout(() => {
-            window.location.hash = '/style-generator';
+            navigate('/members', { replace: true });
           }, 3000);
           return;
         }
 
         if (data.session) {
           setStatus('success');
-          // Successful auth - redirect to style generator
+          // Successful auth - redirect to requested destination
           setTimeout(() => {
-            window.location.hash = '/style-generator';
+            navigate(nextPath, { replace: true });
           }, 500);
         } else {
           // No session yet, wait a bit and try again
@@ -48,7 +57,7 @@ export const AuthCallback: React.FC = () => {
         setStatus('error');
         setErrorMessage('Authentication failed');
         setTimeout(() => {
-          window.location.hash = '/style-generator';
+          navigate('/members', { replace: true });
         }, 3000);
       }
     };

@@ -20,6 +20,13 @@ exports/style-previews-desktop-flat/
 # Optional: exclude local output logs
 *.log
 
+# Never upload local env files / secrets
+.env*
+
+# Never upload local configuration guides (may contain secrets)
+OAUTH_CONFIGURATION_GUIDE.md
+CONFIGURATION_CHECKLIST.md
+
 # --- Reduce style preview payload (ONLY deploy curated set) ---
 # Exclude all style preview images by default
 exports/style-previews/extensions/**

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Upload, Camera, Loader2, Sparkles, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { OptimizedImage } from '../ui/OptimizedImage';
@@ -16,6 +17,7 @@ import {
 import { stylePreviewAvailability } from '../../data/stylePreviewAvailability';
 
 export const StyleGenerator: React.FC = () => {
+  const navigate = useNavigate();
   const [image, setImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -446,7 +448,11 @@ export const StyleGenerator: React.FC = () => {
             </div>
 
             <div className="mt-4 flex flex-col sm:flex-row gap-3">
-              <Button size="sm" onClick={() => (window.location.hash = '/booking')} className="w-full sm:w-auto">
+              <Button
+                size="sm"
+                onClick={() => navigate('/booking')}
+                className="w-full sm:w-auto"
+              >
                 Book This Style
               </Button>
               {selectedPreview && !result && (

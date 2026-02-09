@@ -1,15 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { OptimizedImage } from '../components/ui/OptimizedImage';
 import { services } from '../data/salonContent';
 import { Button } from '../components/ui/Button';
 
 export const Services: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="pt-32 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
         <nav className="text-xs text-gray-500 mb-6" aria-label="Breadcrumb">
-          <button className="hover:text-deep-charcoal" onClick={() => (window.location.hash = '/')} type="button">Home</button>
+          <button className="hover:text-deep-charcoal" onClick={() => navigate('/')} type="button">Home</button>
           <span className="mx-2">/</span>
           <span className="text-gray-700">Services</span>
         </nav>
@@ -63,7 +65,7 @@ export const Services: React.FC = () => {
                       <p className="text-xs text-gray-500 italic mb-6">{s.notes}</p>
                     )}
 
-                    <Button size="md" onClick={() => (window.location.hash = '/booking')}>Book a Consultation</Button>
+                    <Button size="md" onClick={() => navigate('/booking')}>Book a Consultation</Button>
                   </div>
                 </div>
               </div>

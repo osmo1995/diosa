@@ -43,8 +43,8 @@ export async function handleCreateCheckoutSession(req: IncomingMessage, res: Ser
           quantity: body.mode === 'payment' ? Math.max(1, Math.min(99, Number(body.quantity ?? 1))) : 1,
         },
       ],
-      success_url: `${origin}/#/style-generator?billing=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/#/style-generator?billing=cancel`,
+      success_url: `${origin}/style-generator?billing=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/style-generator?billing=cancel`,
       metadata: {
         supabase_user_id: userData.user.id,
       },

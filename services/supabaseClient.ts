@@ -5,4 +5,14 @@ import { createClient } from '@supabase/supabase-js';
 const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-export const supabaseClient = url && anon ? createClient(url, anon) : null;
+export const supabaseClient =
+  url && anon
+    ? createClient(url, anon, {
+        auth: {
+          // Ensure OAuth/magic-link sessions are detected when returning from the provider.
+          detectSessionInUrl: true,
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+      })
+    : null;

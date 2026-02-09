@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { submitBooking } from '../services/bookingService';
 import { CheckCircle, Calendar, Sparkles, User, Scissors } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -8,6 +9,7 @@ import { services } from '../data/salonContent';
 import { FormData } from '../types';
 
 export const Contact: React.FC = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -280,8 +282,10 @@ export const Contact: React.FC = () => {
             </div>
 
             <div className="pt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={() => window.location.hash = '/'}>Return Home</Button>
-              <Button size="lg" variant="outline" onClick={() => window.location.hash = '/services'}>Explore Methods</Button>
+              <Button size="lg" onClick={() => navigate('/')}>Return Home</Button>
+              <Button size="lg" variant="outline" onClick={() => navigate('/services')}>
+                Explore Methods
+              </Button>
             </div>
           </div>
         );

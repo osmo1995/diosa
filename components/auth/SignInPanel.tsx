@@ -26,7 +26,8 @@ export const SignInPanel: React.FC = () => {
     setStatus(null);
     try {
       // Redirect to members page after OAuth (members page will redirect to style-generator if authenticated)
-      const redirectTo = `${window.location.origin}/#/members`;
+      // Use a real path callback (BrowserRouter) so OAuth providers don't fight the SPA hash.
+      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent('/style-generator')}`;
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -46,7 +47,7 @@ export const SignInPanel: React.FC = () => {
     setStatus(null);
     try {
       // Redirect to members page after magic link sign-in
-      const emailRedirectTo = `${window.location.origin}/#/members`;
+      const emailRedirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent('/style-generator')}`;
       const { error } = await supabaseClient.auth.signInWithOtp({
         email,
         options: {

@@ -29,7 +29,7 @@ const MotionGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
 };
 
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { ScrollToTop } from './components/ui/ScrollToTop';

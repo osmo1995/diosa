@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, ChevronLeft, ChevronRight, Maximize } from 'lucide-react';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { OptimizedImage } from '../components/ui/OptimizedImage';
@@ -8,6 +9,7 @@ import { galleryItems } from '../data/salonContent';
 type Category = 'All' | 'Blonde' | 'Volume' | 'Length';
 
 export const Gallery: React.FC = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
@@ -36,7 +38,7 @@ export const Gallery: React.FC = () => {
     <div className="pt-32 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
         <nav className="text-xs text-gray-500 mb-6" aria-label="Breadcrumb">
-          <button className="hover:text-deep-charcoal" onClick={() => (window.location.hash = '/')} type="button">Home</button>
+          <button className="hover:text-deep-charcoal" onClick={() => navigate('/')} type="button">Home</button>
           <span className="mx-2">/</span>
           <span className="text-gray-700">Gallery</span>
         </nav>

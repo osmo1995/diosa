@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ShoppingBag } from 'lucide-react';
 import { Button } from '../ui/Button';
 
@@ -8,6 +8,7 @@ export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isHome = location.pathname === '/';
 
@@ -56,7 +57,7 @@ export const Navbar: React.FC = () => {
               {link.name}
             </Link>
           ))}
-          <Button variant="primary" size="sm" onClick={() => window.location.hash = '/booking'}>
+          <Button variant="primary" size="sm" onClick={() => navigate('/booking')}>
             Book Now
           </Button>
         </div>
@@ -102,7 +103,7 @@ export const Navbar: React.FC = () => {
             className="max-w-xs"
             onClick={() => {
               setIsMobileMenuOpen(false);
-              window.location.hash = '/booking';
+              navigate('/booking');
             }}
           >
             Book Free Consultation

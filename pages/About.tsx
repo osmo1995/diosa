@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { Button } from '../components/ui/Button';
 import { OptimizedImage } from '../components/ui/OptimizedImage';
 
 export const About: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="pt-32 pb-24 bg-goddess-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -19,8 +22,8 @@ export const About: React.FC = () => {
               We focus on comfort, scalp health, and repeatable results  so your hair feels as luxurious as it looks.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" onClick={() => (window.location.hash = '/booking')}>Book Your Consultation</Button>
-              <Button size="lg" variant="outline" onClick={() => (window.location.hash = '/services')}>Explore Methods</Button>
+              <Button size="lg" onClick={() => navigate('/booking')}>Book Your Consultation</Button>
+              <Button size="lg" variant="outline" onClick={() => navigate('/services')}>Explore Methods</Button>
             </div>
           </div>
 
